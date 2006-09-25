@@ -15,9 +15,9 @@ import timed_spinners.Model;
 // Roger Prowse
 // History:
 //		6 Dec 2001:	* Built objects in a hierarchy:
-//		26 Sept 2002: 		Tested OK
-//		27 Nov 2002: v2: 	Issued in application package
-//              25 Sep 06:        Import to SVN
+//		26 Sept 2002: 	  Tested OK
+//		27 Nov 2002: v2:  Issued in application package
+//              25 Sep 06:        Import to  Berlios SVN
 ///////////////////////////////////////////////////////////////////////////
 
 public class Application extends JFrame{

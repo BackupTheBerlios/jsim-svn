@@ -25,7 +25,7 @@
  *          
  * Created on 30 October 2006, 21:35
  *
- * To change this template, choose Tools | Template Manager
+ * To change this template, choose Tools | Template DBManager
  * and open the template in the editor.
  */
 
@@ -39,25 +39,52 @@ import java.util.List;
  * @author Roger
  */
 public class SWEngApp1{
-    int Mode;
+    int theMode;
     int clientCount;
     
     List theStatusList;
     IStatus aClientStatus;
     
+    IDatabase theDatabase;
+    IManager theDBManager;
+    
     public SWEngApp1(int aMode){
-        Mode = aMode;
-        if (Mode == IStatus.PRODUCER_CONSUMER){
+        theMode = aMode;
+        if (theMode == IStatus.PRODUCER_CONSUMER){
             clientCount = 2;
-        } else clientCount = 4;       
+        } else clientCount = 4;
+        
+        theDatabase = new Database(theMode);
+        theDBManager = new DBManager(theDatabase, theMode);
+                
         for (int i = 0; i < clientCount; i++){
-            aClientStatus = makeClientStatus();
-            theStatusList.add(aClientStatus); 
+            /*      for each new status, call the DBManager to
+             *      save it into the Database.
+             */
+            aClientStatus = getClientStatus(i);
+            theDBManager.setStatus(aClientStatus, i);
+            IRecord newRecord = makeRecord(aClientStatus, i);
+            theDBManager.setRecord(newRecord, i);
+            
+//            theStatusList.add(aClientStatus); 
+
         }
+
+        
+
     }
         
-    public IStatus makeClientStatus(){
+    /** Get a new Status, either from outside, or make it here
+     */
+    public IStatus getClientStatus(int id){
         return aClientStatus;
+    }
+    
+    /** Use a Status to prepare a 'Run' record
+     */
+    IRecord makeRecord(IStatus aStatus, int i){
+        IRecord newRecord;
+        return newRecord;
     }
     
     /**
@@ -65,7 +92,7 @@ public class SWEngApp1{
      * @return Mode
      */
     public int getMode(){
-        return Mode;
+        return theMode;
     }
     
     /**

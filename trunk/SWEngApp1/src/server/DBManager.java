@@ -19,33 +19,47 @@ import interfaces.*;
  */
 public class DBManager implements IManager{   
     IDatabase refDatabase;
-    int theManagerId;
     int theMode;
     boolean spaceAv;
 
     
     public DBManager(IDatabase aDatabase, int Mode){
         refDatabase = aDatabase;
-        theManagerId = Id;
         theMode = Mode;
         spaceAv = true;      
     }
-       
-    public synchronized void setId(int Id){
-        theManagerId = Id;
+    
+    public synchronized void setStatus(IStatus aStatus, int i){
+        refDatabase.setStatus(aStatus, i);
+    }
+ 
+    public synchronized IStatus getStatus(int i){
+        return refDatabase.getStatus(i);        
+
+    };
+      
+    public synchronized void setRecord(IRecord aRecord, int i){
+        refDatabase.setRecord(aRecord, i);
+        //might be best to have:
+        //aRecord.copyRecord(aRecord, refDatabase.theRecords[i]);
+        // or
+        //
+        //refDatabase.theRecords[i].setRecord(aRecord.getRecord())
+        //More to look at here
     }
     
-    public synchronized int getId(){
-        return theManagerId;
+    public synchronized IRecord getRecord(int i){
+       return refDatabase.getRecord(i);        
+    ;
     }
-
-    public void writeRecord(IRecord aRecord){
+    
+    public void writeRecord(IRecord aRecord, int i){
         // Save a record in the Data area
-        aRecord.copyRecord((Record)aRecord, refDatabase.theData[theManagerId]);
+        aRecord.copyRecord((Record)aRecord, refDatabase.theRecords[i]);
     }//writeRecord
     
     public IRecord readRecord(){
-          return refDatabase.theData[theManagerId].getRecord();        
+          return refDatabase.theRecords[i].getRecord();        
     }//readRecord
 
     public synchronized void Put(IRecord aRecord){

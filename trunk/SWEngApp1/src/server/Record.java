@@ -64,24 +64,24 @@ public class Record implements IRecord, Cloneable{
         return theMode;
     }
     
-    public synchronized void setRecord(IRecord newRecord){
-        theRecordId = newRecord.getId();
-        theMode = newRecord.getMode();
-        thePosIndex = newRecord.getPosIndex();
-        theDirection = newRecord.getDirection();
-        theColorIndex = newRecord.getColorIndex();
-        theBlackOut = newRecord.getBlackOut();
+    public synchronized void setRecord(IRecord fromRecord){
+        theRecordId = fromRecord.getId();
+        theMode = fromRecord.getMode();
+        thePosIndex = fromRecord.getPosIndex();
+        theDirection = fromRecord.getDirection();
+        theColorIndex = fromRecord.getColorIndex();
+        theBlackOut = fromRecord.getBlackOut();
     }
     
      public synchronized Record getRecord(){
-        Record newRecord = new Record(0);
-        newRecord.setId(theRecordId);
-        newRecord.setMode(theMode);
-        newRecord.setPosIndex(thePosIndex);
-        newRecord.setDirection(theDirection);
-        newRecord.setColorIndex(theColorIndex);
-        newRecord.setBlackOut(theBlackOut);
-        return newRecord;
+        Record toRecord = new Record(0);
+        toRecord.setId(theRecordId);
+        toRecord.setMode(theMode);
+        toRecord.setPosIndex(thePosIndex);
+        toRecord.setDirection(theDirection);
+        toRecord.setColorIndex(theColorIndex);
+        toRecord.setBlackOut(theBlackOut);
+        return toRecord;
      }
      
     public synchronized void copyRecord(IRecord fromRecord, IRecord toRecord){

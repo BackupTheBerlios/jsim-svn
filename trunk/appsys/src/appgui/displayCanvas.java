@@ -85,6 +85,8 @@ public class displayCanvas extends Canvas implements Observer{
         // Set the details of the line for display
         startPoint.x = theLine.getStartPoint().x;
         startPoint.y = theLine.getStartPoint().y;
+        //startPoint.x = centerPoint.x;         //This moves to center but
+        //startPoint.y = centerPoint.y;         //distorts spinner
         endPoint.x = theLine.getEndPoint().x;
         endPoint.y = theLine.getEndPoint().y; 
         theColor = theLine.getColor();
@@ -93,8 +95,8 @@ public class displayCanvas extends Canvas implements Observer{
         //within the display canvas
         //In the general case sizing needs a proper transformation for
         //start and end points
-        startPoint.x = Math.min(startPoint.x, size.width - 5);
-        startPoint.y = Math.min(startPoint.y, size.height - 5);
+        //startPoint.x = Math.min(startPoint.x, size.width - 5);
+        //startPoint.y = Math.min(startPoint.y, size.height - 5);
         endPoint.x = Math.min(endPoint.x, size.width - 5);
         endPoint.y = Math.min(endPoint.y, size.height - 5);
 //        System.out.println("Update endPoint" + theLine.getEndPoint()+" startPoint" + theLine.getStartPoint()+" color "+theLine.getColor());

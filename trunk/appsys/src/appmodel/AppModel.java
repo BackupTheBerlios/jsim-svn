@@ -2,7 +2,11 @@
 
 package appmodel;
 
-import appgui.MainForm;
+// use Matisse gui
+import appmatissegui.*;
+import appgui.displayCanvas;
+// use original gui
+//import appgui.*;
 import java.util.*; 	// for Date and Observable/Observer
 import server.*;
 

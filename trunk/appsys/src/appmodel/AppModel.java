@@ -3,10 +3,10 @@
 package appmodel;
 
 // use Matisse gui
-import appmatissegui.*;
-import appgui.displayCanvas;
-// use original gui
-//import appgui.*;
+//import appmatissegui.*;
+//import appgui.displayCanvas;
+// use Original gui
+import appgui.*;
 import java.util.*; 	// for Date and Observable/Observer
 import server.*;
 
@@ -100,10 +100,7 @@ import server.*;
  * @author Roger Prowse
  * @version "%I%, %G%"
  */
-public class AppModel {// implements IModel{
-//    AppServer refAppServer;
-//    Status sysStatus;
-//    int mode;
+public class AppModel {
     int clientCount;
     int sysMode;
     
@@ -116,28 +113,16 @@ public class AppModel {// implements IModel{
      * @param Mode selects mode of interaction between Spinners
      */
     public AppModel(AppServer appServer, String title, int sysMode){
-//        refAppServer = appServer;
         clientCount = appServer.getClientCount();
         this.sysMode = sysMode;
         System.out.println("appmodel: clientCount = "+clientCount);//**
-        /*
-        status = appServer.getStartupStatus();
-        Mode = aDatabase.getMode();
-        clientCount = aDatabase.getCount();
-        */
         appRunners = new AppRunner[clientCount];        
         runnerThreads = new Thread[clientCount];
-//        Status status = new Status();
-//        Record record = new Record();
         for (int i = 0; i < clientCount; i++){
-            appRunners[i] = new AppRunner(appServer/*, status, record*/,i);            
+            appRunners[i] = new AppRunner(appServer,i);            
             //Attach runner to threads and give names to help debugging
             String name = i+"";
             runnerThreads[i] = new Thread(appRunners[i],name);
-//            status = appServer.getStartupStatus(i);
-//            System.out.println("appModel status.id = "+status.getId());
-
-//            record = appServer.getRunningRecord(i);
         }
         mainForm = new MainForm(this, title, sysMode, clientCount);
         mainForm.setVisible(true);

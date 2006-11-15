@@ -40,7 +40,6 @@ public class buttonSensor implements ActionListener{
         }catch(InterruptedException e){
             System.out.println("Interrupted wait");
         }
-//        System.out.println("checkGoingState"+theId+" State = "+goingState);
     }
 
 }//buttonSensor

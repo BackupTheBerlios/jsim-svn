@@ -19,14 +19,14 @@ public class Database {
 
     public void setStartupStatuses(int i, Status val) {
         startupStatuses[i].setStatus(val);
-        System.out.println("DB setStartupStatuses id = "+startupStatuses[i].getStatus().getId()+startupStatuses[i].id);
+        System.out.println("DB setStartupStatuses id = "+startupStatuses[i].getStatus().getId());
        
     }
 
     public Status getStartupStatuses(int i) {
         Status status = new Status();
         status = startupStatuses[i].getStatus();
-        System.out.println("Database getStartupStatuses id = "+status.getId()+ startupStatuses[i].id);
+        System.out.println("Database getStartupStatuses id = "+status.getId());
         return status;
 
 //        return startupStatuses[i];

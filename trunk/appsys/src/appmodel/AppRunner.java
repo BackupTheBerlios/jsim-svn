@@ -40,7 +40,7 @@ public class AppRunner implements Runnable {
         period = delay*delayFactor;
         record = appServer.getRunningRecord(i);
        
-        theSpinner = new Spinner(appServer, status, record/*, id*/);
+        theSpinner = new Spinner(appServer, status, record);
         theButtonSensor = new buttonSensor(id);
 
         System.out.println("Made appRunner "+id+": " + delay+" * "+delayFactor+" = "+period);       

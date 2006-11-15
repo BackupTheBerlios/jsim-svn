@@ -21,7 +21,6 @@ public class Spinner extends Observable{
     int id;
     int mode;
     int maxPosIndex;
-    int theManagerId;		// Identity of Manager object
     
     int radius;
     int increment;
@@ -37,7 +36,7 @@ public class Spinner extends Observable{
     
     boolean newCycle;
     // Constructor
-    public Spinner(AppServer appServer, Status status, Record record/*, int id*/){
+    public Spinner(AppServer appServer, Status status, Record record){
         refServer = appServer;
         startupStatus = status;
         runningRecord = record;
@@ -48,29 +47,6 @@ public class Spinner extends Observable{
         increment = status.getIncrement();
         theDirection = status.getDirection();
         blackOut = status.getBlackOut();
-        // Depending on the Mode, allocate a Manager to each Spinner
-        switch (mode){
-            // Separate statuses
-            case IStatus.NORMAL:
-                theManagerId = id; //theManagerId = id;
-                break;
-            // Same startupStatus for all, but not synchronised
-            case IStatus.CONFLICT:
-                theManagerId = 0; //theManagerId = 0;
-                break;
-            // Same startupStatus for all, but synchronised for mutual exclusion
-            case IStatus.SYNCHRONIZED:
-                theManagerId = 0; //theManagerId = 0;
-                break;
-            // Producer/Consumer:
-            // Only two Spinners 0 & 1 and they share Status 0
-            case IStatus.PRODUCER_CONSUMER:
-                theManagerId = id; //theManagerId = id;
-                if (id == 1) {
-                    theManagerId = 0;//theManagerId = 0;
-                }
-                break;
-        }
         
         Center.x = 80;
         Center.y = 110;
@@ -140,14 +116,7 @@ public class Spinner extends Observable{
         setChanged();
         notifyObservers(lineSpec);
     }
-    
-    public int getTheManagerId() {
-        return theManagerId;
-    }
-    public void setTheManagerId(int val) {
-        this.theManagerId = val;
-    }
-    
+        
     public synchronized double getRadians(int newStep){
         theRadians = ((double)(newStep * increment) * 0.017453292);
         return theRadians;

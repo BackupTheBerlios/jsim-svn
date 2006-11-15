@@ -99,11 +99,19 @@ public class AppServer{
                 return aRecord;
             case IStatus.SYNCHRONIZED:
                 synchronized (this){
+                    update(i,50);
+                    return aRecord;
+                }
+            case IStatus.PRODUCER_CONSUMER:
+                synchronized (this){
                     update(i,500);
                     return aRecord;
                 }
-            case IStatus.PRODUCER_CONSUMER: return aRecord;
-            default: return aRecord;
+            default:                 
+                synchronized (this){
+                    update(i,500);
+                    return aRecord;
+                }
         }
     }
     

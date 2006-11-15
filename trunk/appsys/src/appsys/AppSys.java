@@ -54,22 +54,4 @@ public class AppSys {
         // and start the model        
         appModel.startModel();
     }
-
-/*
-    public AppServer getAppServer() {
-        return appServer;
-    }
-
-    public void setAppServer(AppServer val) {
-        this.appServer = val;
-    }
-
-    public AppModel getAppModel() {
-        return appModel;
-    }
-
-    public void setAppModel(AppModel val) {
-        this.appModel = val;
-    }
- */   
 }

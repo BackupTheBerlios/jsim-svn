@@ -35,6 +35,7 @@ public class Spinner extends Observable{
     Color theColor;
     boolean blackOut;
     
+    boolean newCycle;
     // Constructor
     public Spinner(AppServer appServer, Status status, Record record/*, int id*/){
         refServer = appServer;
@@ -93,6 +94,7 @@ public class Spinner extends Observable{
         ColorTable[12] = new Color(255, 255, 255);	//White
         ColorTable[13] = new Color(128, 128, 128);	//Shadow
 
+        newCycle = false;
         System.out.println("Made Spinner " + status.getId());
     }
     
@@ -105,13 +107,12 @@ public class Spinner extends Observable{
         runningRecord.incPosIndex();
         // Run the SpinStepper to make a lineSpec and send it to the displayCanvas
         makeNextLine(runningRecord);
-        
         if (runningRecord.getPosIndex() == maxPosIndex){//NB: different for reverse
             // the spinner app has completed a full cycle,
             // so send the id to the server which controls the parameters
             // for a pattern such as a Spinner.
             // Tell server to generate a new runningRecord
-            runningRecord = refServer.cycleEnded(id);            
+            runningRecord = refServer.cycleEnded(id); 
         }
     }//executeOneStep
     
@@ -121,7 +122,7 @@ public class Spinner extends Observable{
         //POST: Calculations done to define the line for the next step
         //          Direction is irrelevant: it is used by Spinner
         LineSpec lineSpec = new LineSpec();
-        System.out.println("Update " + aRecord.getId()+" pos "+aRecord.getPosIndex());
+//        System.out.println("Update " + aRecord.getId()+" pos "+aRecord.getPosIndex());
         startPoint.x = Center.x;
         startPoint.y = Center.y;        
         lineSpec.setStartPoint(startPoint);

@@ -52,7 +52,7 @@ public class AppRunner implements Runnable {
             while (true) {
                 // If button has been pressed to stop, then wait
                 theButtonSensor.checkGoingState();
-
+                
                 theSpinner.executeOneStep();
                 Thread.sleep(period);
             }

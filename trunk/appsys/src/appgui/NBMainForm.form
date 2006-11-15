@@ -73,7 +73,7 @@
                       <Component id="theSpinnerPanel3" max="32767" attributes="1"/>
                       <Component id="theSpinnerPanel1" alignment="0" max="32767" attributes="1"/>
                   </Group>
-                  <EmptySpace pref="21" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

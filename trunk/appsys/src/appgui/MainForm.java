@@ -13,8 +13,8 @@ import javax.swing.*;           // for Timer etc
 public class MainForm extends JFrame {//implements IMainForm{
     GUIPanel theGUIPanel;
     // The Constructor
-    public MainForm(AppModel appModel, String title, int clientCount) {
-        super(title + clientCount);
+    public MainForm(AppModel appModel,String title,int sysMode,int clientCount) {
+        super(title + sysMode);
         if (clientCount > 2){
             setSize(800,600);
         }else {

@@ -8,11 +8,13 @@ public class AppServer{
     Status aStatus;
     Record aRecord;
     private int clientCount = 4;
+    int sysMode;
     
-    public AppServer() {
+    public AppServer(int sysMode) {
         dbManager = new DBManager(clientCount);
         aStatus = new Status();
         aRecord = new Record();
+        this.sysMode = sysMode;
         for (int i = 0; i < clientCount; i++) {
             makeSetup(i);
             dbManager.saveSetup(i, aStatus, aRecord);
@@ -32,7 +34,7 @@ public class AppServer{
         
     public void makeSetup(int i) {
         //make aStatus
-        aStatus.makeStatus(i);
+        aStatus.makeStatus(i, sysMode);
         //make runningRecord
         aRecord.setRecord(i);
     }
@@ -54,52 +56,6 @@ public class AppServer{
     }
 
     
-    ///////////////////////////////////////////////////////////////////////
-    // Here is the 'Business Model':AppModel, which controls the parameters
-    // for a pattern such as a Spinner.
-        /** Write(), then Read()
-
-    IRecord accessDatabase(DBManager dbManager, IRecord aRecord){
-        dbManager.writeRecord(aRecord);
-        return dbManager.readRecord();
-    }
-
-    void putToDatabase(DBManager dbManager, IRecord aRecord){               
-        dbManager.Put(aRecord);
-    }
-
-    IRecord getFromDatabase(DBManager dbManager, IRecord aRecord){
-        aRecord = dbManager.Get();
-        return aRecord;
-    }
-    */
-    ///////////////////////////////////////
-    public Record cycleEnded(int i){
-        //PRE:  aRecord from the app object
-        //      This has all the data needed to define the current state of
-        //      the app(i), which can be used together with Status(i)
-        //      to update the record.
-        //POST: A new record is returned
-        // First get the record and note the mode
-//        aRecord = getRunningRecord(i);
-        aRecord = dbManager.getRecord(i);
-       //Now we do the job requested by the app client.
-        //  called with: record.getPosIndex() == endOfCycle
-        //  where endOfCycle = maxPosIndex for forward and 0 for reverse
-        //  That is, we have completed one cycle.
-        //  Reset the posIndex
-        aRecord.setPosIndex(0); //depending on direction
-        // increment the colour index
-        aRecord.incColorIndex();
-        if (aRecord.getColorIndex() == 14){ //also may depend on app
-            // if all colours done, start again
-            aRecord.setColorIndex(0);
-            //if ((record).incCount|2 == 0){
-            // (record).setDirection(true)}
-            //else (record).setDirection(false);
-        }
-        dbManager.setRecord(i, aRecord);
-        // Different modes show problems of mutual exclusion etc
 /*        int mode = dbManager.getStatus(id).getMode();
         if (mode != IStatus.PRODUCER_CONSUMER){// not Mode 3
             // write and update the database record
@@ -124,9 +80,49 @@ public class AppServer{
             }
         }
  */
-        System.out.println("appServer cycleEnded: "+i);
-        return aRecord;
+    ///////////////////////////////////////
+    public Record cycleEnded(int i){
+        //PRE:  aRecord from the app object
+        //      This has all the data needed to define the current state of
+        //      the app(i), which can be used together with Status(i)
+        //      to update the record.
+        //POST: A new record is returned
+        // First get the record and note the mode
+        // Different modes show problems of mutual exclusion etc
+        if (sysMode == IStatus.SYNCHRONIZED){
+            synchronized (this){
+                update(i);
+                return aRecord;
+            }
+        } else {
+            update(i);
+            return aRecord;
+        }
     }
-
-
+    
+    private void update(int i){        
+        //Now we do the job requested by the app client.
+        //  called with: record.getPosIndex() == endOfCycle
+        //  where endOfCycle = maxPosIndex for forward and 0 for reverse
+         aRecord = dbManager.getRecord(i);
+        //  Reset the posIndex
+        aRecord.setPosIndex(0); //depending on direction
+        // increment the colour index
+        aRecord.incColorIndex();
+        if (aRecord.getColorIndex() == aStatus.getMaxColorIndex()){ 
+            //also may depend on app
+            // if all colours done, start again
+            aRecord.setColorIndex(0);
+            //if ((record).incCount|2 == 0){
+            // (record).setDirection(true)}
+            //else (record).setDirection(false);
+        }
+        try{
+            Thread.sleep(10);
+        }catch(InterruptedException e){
+            System.out.println("Interrupted sleep");
+        }
+        dbManager.setRecord(i, aRecord);
+        System.out.println("appServer cycleEnded: "+i);
+    }
 }

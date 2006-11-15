@@ -42,15 +42,15 @@ public class AppSys {
         //              MainForm mainForm;
         
         // Now interpret the required mode
-        int mode;
-        try{mode = Integer.parseInt(args[0]);
-        if(mode > 3) {mode = 0;}
+        int sysMode;
+        try{sysMode = Integer.parseInt(args[0]);
+        if(sysMode > 3) {sysMode = 0;}
         } catch(NumberFormatException e){
             System.out.println("Invalid format -- select 0");
-            mode = 0;}
+            sysMode = 0;}
         //Activate the Server and the Model i.e. the App/Model/GUI system
-        appServer = new AppServer();
-        appModel = new AppModel(appServer, title);
+        appServer = new AppServer(sysMode);
+        appModel = new AppModel(appServer, title, sysMode);
         // and start the model        
         appModel.startModel();
     }

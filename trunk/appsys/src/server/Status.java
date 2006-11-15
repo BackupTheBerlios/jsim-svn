@@ -66,17 +66,16 @@ public class Status implements IStatus{
         maxColorIndex = fromStatus.getMaxColorIndex();
         blackOut = fromStatus.getBlackOut();
     }    
-    public void makeStatus(int i){
+    public void makeStatus(int i, int sysMode){
         id = i;
         function = SPINNER;
-        mode = NORMAL;
+        mode = sysMode;
         switch(mode){
-            // Separate records for each spinner
-            case NORMAL: break;                 //Separate records
-            case CONFLICT: id = 0; break;       //All share the same
-                                                //      unsynchronized record
-            case SYNCHRONIZED: id = 0; break;   //All share one record in turn
-            case PRODUCER_CONSUMER: break;      //Still to do
+            // Decide whether to do anything special depending on mode
+            case NORMAL: break;                     
+            case CONFLICT: break;
+            case SYNCHRONIZED: break;
+            case PRODUCER_CONSUMER: break;
             default: ;
         }
         coOpMode = NORMAL;
@@ -94,6 +93,7 @@ public class Status implements IStatus{
         if (direction == true) 
             maxPosIndex = 360/increment;
         else maxPosIndex = 0;
+        maxColorIndex = 14;
         if ((i == 0)&&(mode == PRODUCER_CONSUMER))
             blackOut = true;
         else blackOut = false;
@@ -104,28 +104,28 @@ public class Status implements IStatus{
         return id;
     }
     public void setId(int val){
-        this.id = val;
+        id = val;
     }    
     
      public int getMode(){
         return mode;
     }  
     public void setMode(int val) {
-        this.mode = val;
+        mode = val;
     }
     
-    public void setCoOpMode(int val){
-        this.coOpMode = val;
-    }    
     public int getCoOpMode(){
         return coOpMode;
     }
+    public void setCoOpMode(int val){
+        coOpMode = val;
+    }    
     
     public int getFunction(){
         return function;
     }
     public void setFunction(int val){
-        this.function = val;
+        function = val;
     }
          
     public int getIncrement() {
@@ -139,42 +139,42 @@ public class Status implements IStatus{
         return direction;
     }
     public void setDirection(boolean val) {
-        this.direction = val;
+        direction = val;
     }
 
     public int getDelay(){
         return delay;
     }
     public void setDelay(int val){
-        this.delay = val;
+        delay = val;
     }
 
     public int getDelayFactor(){
         return delayFactor;
     }
     public void setDelayFactor(int val){
-        this.delayFactor = val;
+        delayFactor = val;
     }
 
     public boolean getBlackOut(){
         return blackOut;
     }
     public void setBlackOut(boolean val) {
-        this.blackOut = val;
+        blackOut = val;
     }
 
     public int getMaxPosIndex() {
         return maxPosIndex;
     }
     public void setMaxPosIndex(int val) {
-        this.maxPosIndex = val;
+        maxPosIndex = val;
     }
 
     public int getMaxColorIndex() {
         return maxColorIndex;
     }
     public void setMaxColorIndex(int val) {
-        this.maxColorIndex = val;
+        maxColorIndex = val;
     }
 
 

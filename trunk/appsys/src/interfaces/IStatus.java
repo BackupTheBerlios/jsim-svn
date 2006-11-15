@@ -32,7 +32,7 @@ public interface IStatus {
 
     
     public IStatus getStatus();
-    public void makeStatus(int i);
+    public void makeStatus(int i, int mode);
     
     public int getId();
     public void setId(int val);    

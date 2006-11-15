@@ -97,7 +97,7 @@ public class displayCanvas extends Canvas implements Observer{
         startPoint.y = Math.min(startPoint.y, size.height - 5);
         endPoint.x = Math.min(endPoint.x, size.width - 5);
         endPoint.y = Math.min(endPoint.y, size.height - 5);
-        System.out.println("Update endPoint" + theLine.getEndPoint()+" startPoint" + theLine.getStartPoint()+" color "+theLine.getColor());
+//        System.out.println("Update endPoint" + theLine.getEndPoint()+" startPoint" + theLine.getStartPoint()+" color "+theLine.getColor());
 
         repaint();        
     }

@@ -17,19 +17,19 @@ import javax.swing.*;
 public class NBMainForm extends javax.swing.JFrame/* implements IMainForm*/{
     private DefaultListModel dlm = new DefaultListModel();
     
-    int theMode;
     AppModel refModel;
-    String theTitle;
     int theId;
+    int theMode;
+    String theTitle;
     
     /**
      * Creates new form NBMainForm Display
      */
-    public NBMainForm(int Mode, AppModel aModel, String title) {
-        theMode = Mode;
+    public NBMainForm(AppModel aModel, String title,int sysMode,int clientCount) {
         refModel = aModel;
+        theMode = sysMode;
         theTitle = title;
-        if (Mode != 3){
+        if (clientCount > 2){
             setSize(800,600);
         }else {
             setSize(400,600);}

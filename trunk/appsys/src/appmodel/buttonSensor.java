@@ -27,20 +27,20 @@ public class buttonSensor implements ActionListener{
     
     public synchronized void changeGoingState(){
         goingState = !goingState;
-        System.out.println("changeGoingState"+theId+" goingState = "+goingState);
+        System.out.println("changeGoingState "+theId+" goingState = "+goingState);
         if (goingState == true) {notify();}
     }
     
     public synchronized void checkGoingState(){
         try{
             while (!goingState){
-                System.out.println("Spinner"+theId+": Waiting ");
+//                System.out.println("Spinner"+theId+": Waiting ");
                 wait();
             }
         }catch(InterruptedException e){
             System.out.println("Interrupted wait");
         }
-        System.out.println("checkGoingState"+theId+" State = "+goingState);
+//        System.out.println("checkGoingState"+theId+" State = "+goingState);
     }
 
 }//buttonSensor

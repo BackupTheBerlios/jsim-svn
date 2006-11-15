@@ -101,6 +101,7 @@ public class AppModel {// implements IModel{
 //    Status sysStatus;
 //    int mode;
     int clientCount;
+    int sysMode;
     
     AppRunner[] appRunners;
     Thread [] runnerThreads;
@@ -110,9 +111,10 @@ public class AppModel {// implements IModel{
      * 
      * @param Mode selects mode of interaction between Spinners
      */
-    public AppModel(AppServer appServer, String title){
+    public AppModel(AppServer appServer, String title, int sysMode){
 //        refAppServer = appServer;
         clientCount = appServer.getClientCount();
+        this.sysMode = sysMode;
         System.out.println("appmodel: clientCount = "+clientCount);//**
         /*
         status = appServer.getStartupStatus();
@@ -133,7 +135,7 @@ public class AppModel {// implements IModel{
 
 //            record = appServer.getRunningRecord(i);
         }
-        mainForm = new MainForm(this, title, clientCount);
+        mainForm = new MainForm(this, title, sysMode, clientCount);
         mainForm.setVisible(true);
 }
     

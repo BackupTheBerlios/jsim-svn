@@ -89,18 +89,25 @@ public class AppServer{
         //POST: A new record is returned
         // First get the record and note the mode
         // Different modes show problems of mutual exclusion etc
-        if (sysMode == IStatus.SYNCHRONIZED){
-            synchronized (this){
-                update(i);
+        switch(sysMode){
+            // Decide whether to do anything special depending on mode
+            case IStatus.NORMAL:
+                update(i, 0);
+                return aRecord;                     
+            case IStatus.CONFLICT: 
+                update(i, 500);
                 return aRecord;
-            }
-        } else {
-            update(i);
-            return aRecord;
+            case IStatus.SYNCHRONIZED:
+                synchronized (this){
+                    update(i,500);
+                    return aRecord;
+                }
+            case IStatus.PRODUCER_CONSUMER: return aRecord;
+            default: return aRecord;
         }
     }
     
-    private void update(int i){        
+    private void update(int i, int sleepTime){        
         //Now we do the job requested by the app client.
         //  called with: record.getPosIndex() == endOfCycle
         //  where endOfCycle = maxPosIndex for forward and 0 for reverse
@@ -118,7 +125,7 @@ public class AppServer{
             //else (record).setDirection(false);
         }
         try{
-            Thread.sleep(10);
+            Thread.sleep(sleepTime);
         }catch(InterruptedException e){
             System.out.println("Interrupted sleep");
         }

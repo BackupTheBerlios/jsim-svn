@@ -4,10 +4,9 @@
 //////////////////////////////////////////////////////////////////////////
 package appgui;
 
+import interfaces.IModel;
 import javax.swing.*;       // for Timer etc
 import java.awt.*;          // for GridLayout
-
-import appmodel.AppModel;
 
 //import interfaces.IModel;
 
@@ -21,11 +20,10 @@ import appmodel.AppModel;
 ///////////////////////////////////////////////////////////////////////////
 
 public class SpinnerPanel extends JPanel{
-    public Parameter theParameterPanel;//**
+    public Parameter theParameterPanel;
     displayCanvas theDisplayCanvas;
-//    stepSpinner theDisplaySpinner;
     
-    SpinnerPanel(AppModel theModel, int id){
+    SpinnerPanel(IModel theModel, int id){
         ////////////////////////////////////////
         // Now set up a Spinner panel,
         // and setBackground, size and border
@@ -41,8 +39,6 @@ public class SpinnerPanel extends JPanel{
         // Build the display canvas and add to the Spinner Panel
         theDisplayCanvas = new displayCanvas(theModel, id);
         add(theDisplayCanvas);
-//        theDisplaySpinner = new stepSpinner(theModel, id, theDisplayCanvas);
-
         System.out.println("spinnerPanel: Add display canvas " + id);
     }
     

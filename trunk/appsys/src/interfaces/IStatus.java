@@ -28,9 +28,7 @@ public interface IStatus {
     final static int DELAY = 3;
     final static int DELAY_FACTOR = 4;   
     final static int SEQUENCER = 5;
-
-
-    
+   
     public IStatus getStatus();
     public void makeStatus(int i, int mode);
     
@@ -66,9 +64,4 @@ public interface IStatus {
     
     public int getMaxColorIndex();
     public void setMaxColorIndex(int val);    
-    
-
-//    public void setFnParameter(int paramId, int newParameter);    
-//    public int getFnParameter(int paramId);
-
 }            

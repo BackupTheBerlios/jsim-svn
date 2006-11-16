@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////
 package appgui;
 
-import appmodel.AppModel;
+import interfaces.IModel;
 import java.awt.event.*;
 import javax.swing.*;           // for Timer etc
 import java.awt.*;		// for GridLayout
@@ -27,7 +27,7 @@ public class Parameter extends JPanel implements ActionListener{
     
     JLabel theLabel;
     
-    Parameter(AppModel theModel, int i){
+    Parameter(IModel theModel, int i){
         parameterType = 1;
         parameterId = i;
         // Grid of two rows of as many columns as necessary, (at least 1)

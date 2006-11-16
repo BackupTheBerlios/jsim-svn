@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////
 package appgui;
 
-import appmodel.AppModel;
+import interfaces.IModel;
 import java.awt.event.*;
 import javax.swing.*;           // for Timer etc
 
@@ -13,7 +13,7 @@ import javax.swing.*;           // for Timer etc
 public class MainForm extends JFrame {//implements IMainForm{
     GUIPanel theGUIPanel;
     // The Constructor
-    public MainForm(AppModel appModel,String title,int sysMode,int clientCount) {
+    public MainForm(IModel appModel,String title,int sysMode,int clientCount) {
         super(title + sysMode);
         if (clientCount > 2){
             setSize(800,600);
@@ -28,6 +28,7 @@ public class MainForm extends JFrame {//implements IMainForm{
         theGUIPanel = new GUIPanel(appModel);
         //Make the GUIPanel object the Window to be displayed      
         setContentPane(theGUIPanel);
+        System.out.println("GUI: made mainForm ");        
     }
     
     //////////////////////////////////
@@ -35,7 +36,6 @@ public class MainForm extends JFrame {//implements IMainForm{
     public JToggleButton getEventSource(int i){
         return theGUIPanel.getEventSource(i);
     }
-
 }//MainForm
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////

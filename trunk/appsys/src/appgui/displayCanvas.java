@@ -17,16 +17,15 @@ import java.awt.Point;
 import java.util.Observable;
 import java.util.Observer;
 
-//import interfaces.IModel;
+import interfaces.IModel;
 import interfaces.ILine;
 import java.awt.Dimension;
-//import interfaces.IDisplayController;
 /**
  *
  * @author Roger
  */
 public class displayCanvas extends Canvas implements Observer{
-    AppModel refModel;
+    IModel refModel;
     ILine theLine;
     Point centerPoint = new Point();
     
@@ -42,10 +41,8 @@ public class displayCanvas extends Canvas implements Observer{
     /**
      * Creates a new instance of displayCanvas
      */
-    public displayCanvas(AppModel appModel,/*displayController aDisplayController,*/ int id) {
+    public displayCanvas(IModel appModel,/*displayController aDisplayController,*/ int id) {
         refModel = appModel;
-//        refDisplayController = aDisplayController;
-//        theId = id;
         setBackground(Color.black);
         initialSize = getSize();
         blackOut = false;
@@ -53,10 +50,8 @@ public class displayCanvas extends Canvas implements Observer{
         // 'this' displayCanvas needs to observe changes in the relevant
         // 'Observable' e.g. a spinner or a clientInLink using
         //	getObservable(i) as defined in class 'appModel'
-        //**********
         Observable theObservable = (Observable)appModel.getObservable(id);
-        theObservable.addObserver(this);
-        
+        theObservable.addObserver(this);        
     }
         
         /////////////////////////////////////////////
@@ -121,5 +116,4 @@ public class displayCanvas extends Canvas implements Observer{
         oldEnd.x = endPoint.x; oldEnd.y = endPoint.y;        
         oldStart.x = startPoint.x; oldStart.y = startPoint.y;        
     }
-
 }

@@ -7,6 +7,7 @@ package appmodel;
 //import appgui.displayCanvas;
 // use Original gui
 import appgui.*;
+import interfaces.IModel;
 import java.util.*; 	// for Date and Observable/Observer
 import server.*;
 
@@ -100,7 +101,7 @@ import server.*;
  * @author Roger Prowse
  * @version "%I%, %G%"
  */
-public class AppModel {
+public class AppModel implements IModel{
     int clientCount;
     int sysMode;
     

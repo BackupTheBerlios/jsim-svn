@@ -4,7 +4,7 @@
 
 package appgui;
 
-import appmodel.AppModel;
+import interfaces.IModel;
 import javax.swing.*;	// for Timer etc
 import java.awt.*;	// for GridLayout
 import java.io.Serializable;
@@ -23,7 +23,7 @@ public class GUIPanel extends JPanel implements Serializable/*, IGUIPanel*/{
     int spinnerCount;
     SpinnerPanel[] theSpinnerPanels;
     
-    public GUIPanel(AppModel aModel){
+    public GUIPanel(IModel aModel){
         spinnerCount = aModel.getCount();
         System.out.println("GUI.spinnerCount " + spinnerCount);
         theSpinnerPanels = new SpinnerPanel[spinnerCount];

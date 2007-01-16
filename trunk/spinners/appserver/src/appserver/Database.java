@@ -26,18 +26,16 @@ public class Database {
     public void setStartupStatuses(int i, IStatus val) {
         startupStatuses[i].setStatus(val);
         System.out.println("DB setStartupStatuses id = "+
-                startupStatuses[i].getStatus().getId()+
+                startupStatuses[i].getStatus().getId()+", incr = "+
                     startupStatuses[i].getIncrement());
        
     }
-
-
     
-     public IRecord getRunningRecords(int i) {
+    public IRecord getRunningRecords(int i) {
         IRecord record = new Record();
         record = runningRecords[i].getRecord();
         return record;
-//        return runningRecords[i];
+//        return runningRecords[i];  //Just doing this caused a problem
     }
     public void setRunningRecords(int i, IRecord val) {
         runningRecords[i].setRecord(val);

@@ -122,10 +122,15 @@ public class SimpleClient extends AbstractClient
     reply.replyMade(msg);
 //    mutex.signalM();
   }
-  
+
+  public void checkConnection(){
+        connection.checkConnection();
+    }
+
   public Object getReply(){
     Object ob = new Object();
     ob = reply.getReply();
+    System.out.println("simpleClient: getReply ob :"+ob);
 //    mutex.signalM();
     return ob;
   }
@@ -192,7 +197,7 @@ class Reply{
         }
 
         replyMade = false;
-        System.out.println("Reply: getReply =" +replyMade);
+        System.out.println("Reply msg1 :"+msg1);
         return msg1;
     }
  }   

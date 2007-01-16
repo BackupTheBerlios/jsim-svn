@@ -27,7 +27,8 @@ public class AppClientSys {
      */
     public static void main(String[] args) throws IOException{
         /////////////////////////////////
-        String title = "AppClient: Spinners Concurrent Client/Server: v5 0611120.  Mode = ";
+        String title1 = "appClient: Mode = ";
+        String title2 = "Spinners Concurrent Client/Server: v5 0611120.  ";
         // The system implements the 'Model/View/Controller'(MVC) pattern
         // The 'Model' objects are defined by status/records and are
         // found in the appModel. 
@@ -42,10 +43,10 @@ public class AppClientSys {
         ClientFrame cf;
         //Activate the Server and the Model i.e. the Server/Model/GUI system
         interClient = new InterClient(args);
-        appClient = new AppClient(interClient);
-        cf = new ClientFrame(appClient,(InterClient)interClient,title);
+        appClient = new AppClient(args, interClient);
+        cf = new ClientFrame(appClient,(InterClient)interClient,title1,title2);
         // and start the model        
-        appClient.startClient();
+//        appClient.startClient();
     }
 }
 

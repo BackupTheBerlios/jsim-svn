@@ -30,6 +30,7 @@ public interface IStatus {
     final static int SEQUENCER = 5;
    
     public IStatus getStatus();
+    public void setStatus(IStatus status);
     public void makeStatus(int i, int mode);
 
     public char getName();

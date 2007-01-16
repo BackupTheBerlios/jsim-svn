@@ -18,6 +18,8 @@ import java.util.Observable;
  * @author Roger
  */
 public interface IClient {
+    public void initClient();
+    public void initSys();
     public void startClient();
     public Observable getObservable(int i);
     public int getSysMode();

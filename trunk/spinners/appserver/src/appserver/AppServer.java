@@ -8,37 +8,29 @@ public class AppServer implements IServer{
     private DBManager dbManager;
     IStatus aStatus;
     IRecord aRecord;
-    private int clientCount = 4;
+    private int clientCount;
     int sysMode;
     String[] refArgs;
     
+    public AppServer(){
+        //No arguments passed in when using local server
+    }
     public AppServer(String[] args) {
-        dbManager = new DBManager(clientCount);
-        aStatus = new Status();
-        aRecord = new Record();
-        // Now interpret the required mode
-        try{sysMode = Integer.parseInt(args[0]);
-            if(sysMode > 3) {sysMode = 0;}
-        } catch(NumberFormatException e){
-            System.out.println("Invalid format -- select 0");
+        // There are is one argument when remote: the port number
+        refArgs = new String[1];
+        if (args.length == 1){
+            refArgs[0] = args[0];
         }
-//        sysMode = IStatus.CONFLICT; //fix sysMode
-        sysMode = IStatus.SAFE;
-        for (int i = 0; i < clientCount; i++) {
-            makeSetup(i);
-            dbManager.saveSetup(i, aStatus, aRecord);
-        }              
     }
 
-    public String[] getArgs(){
-        return refArgs;
+    public void initServer(int c, int m){
+        //Here we set up the database, having provided the count and mode
+        setClientCount(c);
+        setSysMode(m);
     }
     
-    public void makeSetup(int i) {
-        //make aStatus
-        aStatus.makeStatus(i, sysMode);
-        //make runningRecord
-        aRecord = new Record(i,0,8,9);
+    public String[] getArgs(){ 
+        return refArgs;
     }
     
     public DBManager getDBManager() {
@@ -47,34 +39,50 @@ public class AppServer implements IServer{
     public void setDBManager(DBManager val) {
         this.dbManager = val;
     }
+ 
+    public void makeSetup() {
+        dbManager = new DBManager(clientCount);
+        aStatus = new Status();
+        aRecord = new Record();
+        System.out.println("AppServer.makeSetup().clientCount = "+clientCount);
+        for (int i = 0; i < clientCount; i++) {
+            //make aStatus
+            aStatus.makeStatus(i, sysMode);
+            //make runningRecord
+            aRecord = new Record(i,0,8,9);
+            dbManager.saveSetup(i, aStatus, aRecord);
+        }
+    }
     
     //////////////////////////////////////////////////////////////////
-    // These methods are called by the client, either directly or via stubs
-    
-    public synchronized IStatus getStartupStatus(int i){
+    // These methods are called by the client, either directly or via stubs    
+    public int getClientCount() {
+        return clientCount;
+    }
+    public void setClientCount(int val) {
+        clientCount = val;
+    }
+    public int getSysMode() {
+        return sysMode;
+    }
+    public void setSysMode(int val) {
+        sysMode = val;
+        makeSetup();
+    }    
+ //--------------------------------------------------------    
+   public synchronized IStatus getStartupStatus(int i){
         IStatus status = new Status();
         status = dbManager.getStatus(i);
-        System.out.println("AppServer getStartupStatus(): "+status+"  "+
-                status.getName()+status.getId()+
-                status.getIncrement());
+        System.out.println("AppServer getStartupStatus(): "+status);
         return status;
     }   
     public synchronized IRecord getRunningRecord(int i){
         IRecord record = new Record();
         record = dbManager.getRecord(i);
-        System.out.println("AppServer getRunningRecord(): "+record+"  "+
-                record.getName()+record.getId()+
-                record.getPosIndex()+record.getColorIndex());
+        System.out.println("AppServer getRunningRecord(): "+record);
         return record;
-    }        
-    public int getSysMode() {
-        return sysMode;
-    }    
-    public int getClientCount() {
-        return clientCount;
     }
-   
-//    public synchronized IRecord cycleEnded(int i){
+  
     public IRecord cycleEnded(int i){
         //PRE:  aRecord from the app object
         //      This has all the data needed to define the current state of
@@ -94,7 +102,7 @@ public class AppServer implements IServer{
                 return record;
             case IStatus.SAFE:
                 synchronized (this){
-                    record = update(i,50);
+                    record = update(i,0);
                     return record;
                 }
             case IStatus.PRODUCER_CONSUMER:
@@ -116,7 +124,7 @@ public class AppServer implements IServer{
         //  where endOfCycle = maxPosIndex for forward and 0 for reverse
          Record record = new Record();
          record = (Record)dbManager.getRecord(i);
-        //  Reset the posIndex
+        // Reset the posIndex
         record.setPosIndex(0); //depending on direction
         // increment the colour index
         record.setColorIndex(record.getColorIndex() + 1);
@@ -137,13 +145,12 @@ public class AppServer implements IServer{
         System.out.println("appServer cycleEnded: "+i);
     return record;
     }    
-//--------------------------------------------------------    
-    public void setSysMode(int val) {
-        this.sysMode = val;
+
+    //Used in remote mode
+    public String messageSent(String m){
+        return m;
     }
-    public void setClientCount(int val) {
-        this.clientCount = val;
-    }
+    
 }
 
 ///////////////////////////////////////

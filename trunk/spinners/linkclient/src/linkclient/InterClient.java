@@ -18,31 +18,25 @@ public class InterClient implements IServer{
     private List liste;
     private SimpleClient simpleClient;
     
-    private int clientCount = 4;
-    int sysMode = 0;
+    private int clientCount;
+    int sysMode;
 
     String[] refArgs;
     String h;
     int p;
     
     public InterClient(String[] args){
-        if (args.length==0){
+        if (args.length<=2){
             h = "localhost";
             p = 12345;}
-        if (args.length==1){//**
-            h = "localhost";
-            p = 12345;}
-        if (args.length==2){
-            h = "localhost";
-            p = Integer.parseInt(args[1]);}
         if (args.length==3){
-            h = args[1];
+            h = "localhost";
             p = Integer.parseInt(args[2]);}
+        if (args.length==4){
+            h = args[2];
+            p = Integer.parseInt(args[3]);}
         this.liste = new List(4);
         simpleClient = new SimpleClient(h,p,liste);
-
-        sysMode = getSysMode();
-        clientCount = getClientCount();        
     }
    
     public String[] getArgs(){
@@ -56,7 +50,17 @@ public class InterClient implements IServer{
     public List getList(){
         return liste;
     }
+    
+    public void initServer(int c, int m){
+        //Here we provide the count and mode to the server
+        setClientCount(c);
+        setSysMode(m);
+    }
+    
 
+    public void makeSetup(){        
+    }
+ 
 ////////////////////////////////////////////////////
     public synchronized IStatus getStartupStatus(int i){
         /*Make connection
@@ -65,9 +69,9 @@ public class InterClient implements IServer{
         try {
             ICommand command = new Command('s', i);
             char c = command.getName();
-            System.out.println("link|InterClient Status.getStartupStatus = "+ c);
             simpleClient.checkedSendToServer(command);
-            status = (Status)simpleClient.getReply();                         
+            status = (Status)simpleClient.getReply();
+//            status.setStatus((IStatus)simpleClient.getReply());                         
         }
         catch (Exception ex)
         {
@@ -75,6 +79,7 @@ public class InterClient implements IServer{
           liste.makeVisible(liste.getItemCount()-1);
           liste.setBackground(Color.yellow);
         }
+        System.out.println("link|InterClient getStartupStatus() = "+ status);
         return status;
     }
     
@@ -97,44 +102,48 @@ public class InterClient implements IServer{
         return record;
     }
     
-    public synchronized int getSysMode() {
-        /*Make connection
-         *Send message to get sysMode*/
-        try {
-            int i = 0;
-            Command command = new Command('y', i);
-//            simpleClient.checkedSendToServer(command);
-            sysMode = 2;
-        }
-        catch (Exception ex)
-        {
-          liste.add(ex.toString());
-          liste.makeVisible(liste.getItemCount()-1);
-          liste.setBackground(Color.yellow);
-        }         
-         //Receive sysMode        
-        return sysMode;
-    }
-        
-    public synchronized int getClientCount() {
-        /*Make connection
-         *Send message to get clientCount*/
-        try {
-            int i = 0;
-            Command command = new Command('c', i);
-//            simpleClient.checkedSendToServer(command);
-            clientCount = 4; //Fixed count
-        }
-        catch (Exception ex)
-        {
-          liste.add(ex.toString());
-          liste.makeVisible(liste.getItemCount()-1);
-          liste.setBackground(Color.yellow);
-        }         
-        //Receive clientCount
+    public int getClientCount(){
         return clientCount;
     }
-
+    public synchronized void setClientCount(int count) {
+        /*Send message to set clientCount*/
+        try {
+            Command command = new Command('c', count);
+            char c = command.getName();
+            System.out.println("link|InterClient notifyClientCount = "+ c);            
+            simpleClient.checkedSendToServer(command);
+            //no need to do anything with this return count
+            int clientCount = (Integer)simpleClient.getReply();            
+        }
+        catch (Exception ex)
+        {
+          liste.add(ex.toString());
+          liste.makeVisible(liste.getItemCount()-1);
+          liste.setBackground(Color.yellow);
+        }         
+    }
+    
+    public int getSysMode(){
+        return IStatus.SAFE;
+    }   
+    public synchronized void setSysMode(int mode) {
+        /*Send message to set sysMode*/
+        try {
+            Command command = new Command('y', mode);
+            char c = command.getName();
+            System.out.println("link|InterClient notifySysMode = "+ c);            
+            simpleClient.checkedSendToServer(command);
+            //no need to do anything with this return mode
+            int sysMode = (Integer)simpleClient.getReply();
+        }
+        catch (Exception ex)
+        {
+          liste.add(ex.toString());
+          liste.makeVisible(liste.getItemCount()-1);
+          liste.setBackground(Color.yellow);
+        }         
+    }
+        
     ///////////////////////////////////////
     public synchronized IRecord cycleEnded(int i){
         /*Make connection
@@ -154,17 +163,15 @@ public class InterClient implements IServer{
           liste.makeVisible(liste.getItemCount()-1);
           liste.setBackground(Color.yellow);
         }         
-        //Receive record
         return record;
     }
     
     public synchronized String messageSent(String message){
         String reply = new String();
         try {
-//            Command command = new Command('m', i);
-            simpleClient.checkedSendToServer('m'+message);
+            simpleClient.checkedSendToServer(/*'m'+*/message);
+            System.out.println("InterClient messageSent(): "+message+" ");
             reply = (String)simpleClient.getReply();
-            System.out.println("InterClient messageSent(): "+reply);
             liste.add(reply);
             liste.makeVisible(liste.getItemCount()-1);
         }
@@ -174,7 +181,6 @@ public class InterClient implements IServer{
           liste.makeVisible(liste.getItemCount()-1);
           liste.setBackground(Color.yellow);
         }         
-        //Receive message
         return reply;
     }
  

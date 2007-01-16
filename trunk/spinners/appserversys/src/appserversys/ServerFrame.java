@@ -33,8 +33,12 @@ import server.*;
 * @see ocsftester.SimpleServer
 */
 public class ServerFrame extends Frame{
+  private AppServer refServer;
   private SimpleServer simpleServer;
   private List liste;
+  private String refTitle1;
+  private String refTitle2;
+//  private boolean init;
 
   private Button closeB =     new Button("Close");
   private Button listenB =    new Button("Listen");
@@ -50,12 +54,12 @@ public class ServerFrame extends Frame{
 
   public ServerFrame(InterServer interServer, AppServer appServer,
                         String title1, String title2){
+    refServer = appServer;
     simpleServer = interServer.getSimpleServer();
     liste = interServer.getList();
+    refTitle1 = title1;
+    refTitle2 = title2;
     
-    int sysMode = appServer.getSysMode();
-    super.setTitle(title1+" "+sysMode+".  "+title2);
-
     port.setText(String.valueOf(simpleServer.getPort()));
 
     addWindowListener(new WindowAdapter() {
@@ -94,7 +98,7 @@ public class ServerFrame extends Frame{
     });
 
     Panel bottom = new Panel();
-    bottom.setLayout(new GridLayout(5,2,5,5));
+    bottom.setLayout(new GridLayout(4,4,5,5));
 
     bottom.add(portLB);
     bottom.add(port);
@@ -110,7 +114,7 @@ public class ServerFrame extends Frame{
     setLayout(new BorderLayout(5,5));
     add("Center", liste);
     add("South", bottom);
-    setSize(300,400);
+    setSize(350,400);
     setVisible(true);
   }
 
@@ -119,11 +123,11 @@ public class ServerFrame extends Frame{
     int p = Integer.parseInt(port.getText());
     int t = Integer.parseInt(timeout.getText());
     int b = Integer.parseInt(backlog.getText());
-
+    
     simpleServer.setPort(p);
     simpleServer.setBacklog(b);
     simpleServer.setTimeout(t);
-  }
+  }  
 
   public void close()
   {

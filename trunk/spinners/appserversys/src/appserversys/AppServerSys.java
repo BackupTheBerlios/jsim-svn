@@ -30,7 +30,7 @@ public class AppServerSys {
         String title1 = "AppServer: Mode = ";
         String title2 = "Spinners Concurrent Client/Server: v5 0611120.  ";
         //The Client stub
-        InterServer interServer;
+        IClient interServer;
         // The system implements the 'Server' pattern
         // b) The appServer provides the data for the client
         AppServer appServer;
@@ -42,8 +42,8 @@ public class AppServerSys {
         //Activate the Server
         appServer = new AppServer(args);
         interServer = new InterServer(appServer);
-        sf = new ServerFrame(interServer,appServer,title1,title2);
-
+        //Initialise the Server as well as the Frame
+        sf = new ServerFrame((InterServer)interServer,appServer,title1,title2);
     }
 }
 

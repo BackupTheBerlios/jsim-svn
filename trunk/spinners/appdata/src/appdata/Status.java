@@ -37,7 +37,7 @@ public class Status implements IStatus, Serializable{
     }
  
     public Status(){
-        name = 't';
+        name = 'b';
         id = 0;
         function = SPINNER;
         mode = 0;
@@ -84,7 +84,7 @@ public class Status implements IStatus, Serializable{
         blackOut = fromStatus.getBlackOut();
     }    
     public void makeStatus(int i, int sysMode){
-        name = 't';
+        name = 'f';
         id = i;
         function = SPINNER;
         mode = sysMode;
@@ -115,7 +115,7 @@ public class Status implements IStatus, Serializable{
         if ((i == 0)&&(mode == PRODUCER_CONSUMER))
             blackOut = true;
         else blackOut = false;
-        System.out.println("Status: "+i+" fn: "+function+" mode: "+mode);
+        System.out.println("Status: name: "+name+" id: "+i+" fn: "+function+" mode: "+mode);
     }
     
     public char getName(){
@@ -219,13 +219,14 @@ public class Status implements IStatus, Serializable{
         maxColorIndex = Integer.parseInt(subStr[10]);
         blackOut = Boolean.parseBoolean(subStr[11]);        
     }
-    
+*/  
+    //This allows the status values to be printed 
     public String toString(){
-        String s = name+" "+id+" "+mode+" "+function+" "+coOpMode+" "+increment+" "+
+        String s = "Status "+name+" "+id+" "+mode+" "+function+" "+coOpMode+" "+increment+" "+
                 direction+" "+delay+" "+delayFactor+" "+maxPosIndex+" "+
                 maxColorIndex+" "+blackOut;
         return s;
     }
- */   
+  
       
    } 

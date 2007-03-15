@@ -11,13 +11,10 @@
  */
 package appserversys;
 
-import appserver.AppServer;
 import interfaces.*;
 import java.awt.*;
 import java.awt.event.*;
 import linkserver.*;
-import server.*;
-
 
 /**
 * The <code> ServerFrame </code> class is a simple interactive
@@ -33,7 +30,7 @@ import server.*;
 * @see ocsftester.SimpleServer
 */
 public class ServerFrame extends Frame{
-  private AppServer refServer;
+  private IServer refServer;
   private SimpleServer simpleServer;
   private List liste;
   private String refTitle1;
@@ -52,7 +49,7 @@ public class ServerFrame extends Frame{
   private Label backlogLB =   new Label("Backlog: ", Label.RIGHT);
 
 
-  public ServerFrame(InterServer interServer, AppServer appServer,
+  public ServerFrame(InterServer interServer, IServer appServer,
                         String title1, String title2){
     refServer = appServer;
     simpleServer = interServer.getSimpleServer();

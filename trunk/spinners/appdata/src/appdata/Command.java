@@ -34,7 +34,7 @@ public class Command implements ICommand, Serializable{
     public char getName(){
         return c;
     }
-    public int getId(){
+    public int getIndex(){
         return i;
     }
 

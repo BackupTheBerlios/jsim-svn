@@ -16,15 +16,17 @@ import java.awt.*;	// for GridLayout
 //		27 Nov 2002: v2: 	Issued in gui package
 ///////////////////////////////////////////////////////////////////////////
 
-public class GUIPanel extends JPanel /*implements Serializable/*, IGUIPanel*/{
-    // Set up the GUIPanel panel comprising four Spinner panels
-    int spinnerCount;
-    SpinnerPanel[] theSpinnerPanels;
+public class GUIPanel extends JPanel implements IGUIPanel{
+    // Set up the GUIPanel panel comprising N view panels for the activities
+    JFrame refFrame;
+    int activityCount;
+    private ViewPanel[] theViewPanels;
     
-    public GUIPanel(IClient aClient){
-        spinnerCount = aClient.getCount();
-        System.out.println("GUIPanel = "+this+" spinnerCount = " + spinnerCount);
-        theSpinnerPanels = new SpinnerPanel[spinnerCount];
+    public GUIPanel(JFrame aFrame, IClient aClient){
+        refFrame = aFrame;
+        activityCount = aClient.getCount();
+        System.out.println("GUIPanel = "+this+" activityCount = " + activityCount);
+        theViewPanels = new ViewPanel[activityCount];
 
         ////////////////////////////////////////
         // Now set up the mainPane,
@@ -33,23 +35,26 @@ public class GUIPanel extends JPanel /*implements Serializable/*, IGUIPanel*/{
         setBorder(BorderFactory.createEtchedBorder(Color.white, Color.blue));
         setBackground(Color.white);
         setLayout(new GridLayout(2,2,20,20));
-        ////////////////////////////////////
-        // Instantiate the objects in the GUIPanel
-        // First build the spinnerPanels, passing to them a reference
-        // to the associated 'Model' object
-        //// to the parent 'Application' object
-        for (int i = 0; i < spinnerCount; i++){
-            theSpinnerPanels[i] = new SpinnerPanel(aClient, i);
-            System.out.println("GUI: Add spinnerPanel " + i);
-            //Add these Panels to the GUIPanel panel
-            add(theSpinnerPanels[i]);
-        }
     }
     
-    //////////////////////////////////
-    // Identify Button[i] as an event source
-    public JToggleButton getEventSource(int i){
-        return theSpinnerPanels[i].theParameterPanel.theButton;
+    public void addViewPanel(int i, IAppRunner appRunner){
+        // Instantiate the objects in the GUIPanel
+        // First build the ViewPanels, passing to them a reference
+        // to the associated 'Client.Controller' object
+        IAppController appController = appRunner.getAppController();
+        theViewPanels[i] = new ViewPanel(i, appController);
+        System.out.println("GUI: Add viewPanel " + i);
+        //Add this panel to the GUIPanel
+        this.add(theViewPanels[i]);
+        //and make the panel visible.
+        refFrame.setVisible(true);
+    }
+    
+    public int getActivityCount() {
+        return activityCount;
+    }
+    public void setActivityCount(int val) {
+        this.activityCount = val;
     }
 }// GUIPanel
 

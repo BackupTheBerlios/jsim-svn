@@ -30,10 +30,10 @@ public class AppServerSys {
         String title1 = "AppServer: Mode = ";
         String title2 = "Spinners Concurrent Client/Server: v5 0611120.  ";
         //The Client stub
-        IClient interServer;
+        InterServer interServer;
         // The system implements the 'Server' pattern
         // b) The appServer provides the data for the client
-        AppServer appServer;
+        IServer appServer;
         //      as parameters to implement the app's e.g. Spinners
         //              Spinner spinner;
         // c) The 'View/Controller' objects -- the GUI for local server control:

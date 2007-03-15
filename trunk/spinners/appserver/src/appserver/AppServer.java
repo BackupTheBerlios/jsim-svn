@@ -1,11 +1,15 @@
 package appserver;
 
+import appdata.AppFactory;
 import interfaces.*;
-import appdata.*;
 
 public class AppServer implements IServer{
 
     private DBManager dbManager;
+    private AppFactory theAppFactory;
+    IAppObj appObj;
+    IAppModel appModel;
+    IAppController appController;
     IStatus aStatus;
     IRecord aRecord;
     private int clientCount;
@@ -27,6 +31,8 @@ public class AppServer implements IServer{
         //Here we set up the database, having provided the count and mode
         setClientCount(c);
         setSysMode(m);
+        System.out.println("AppServer.initServer(): ");
+        makeDatabase();
     }
     
     public String[] getArgs(){ 
@@ -39,18 +45,119 @@ public class AppServer implements IServer{
     public void setDBManager(DBManager val) {
         this.dbManager = val;
     }
+    
+
+    public IAppObj selectApp(int i, String name) {
+    ///////////////////
+    //we use a map factory comprising <name/object> pairs:
+    //Using name as key[i]
+    //we instantiate the appropriate IAppController activity object[i]
+    //specified in theAppFactory map.
+    //For every activity we will add it into database[i] and refer to it
+    //in the corresponding database[i].status.  Then we pass it to
+    //theAppRunner[i], and start the thread. 
+        theAppFactory = new AppFactory(); 
+        appObj = theAppFactory.getAppObj(name);
+        return appObj;
+    }
  
-    public void makeSetup() {
+    public void makeDatabase() {
         dbManager = new DBManager(clientCount);
-        aStatus = new Status();
-        aRecord = new Record();
-        System.out.println("AppServer.makeSetup().clientCount = "+clientCount);
+        String name;
+        IAppObj appObj;
+//        IStatus status;
+        int increment = 6;
+        int delay = 1;
         for (int i = 0; i < clientCount; i++) {
-            //make aStatus
-            aStatus.makeStatus(i, sysMode);
-            //make runningRecord
-            aRecord = new Record(i,0,8,9);
-            dbManager.saveSetup(i, aStatus, aRecord);
+            int coOpMode = IStatus.NORMAL;
+            switch (i){
+                case 0: {
+                    increment = 3;
+                    delay = 1;
+                    //Status(name,id,IStatus.FUNCTION,mode,IStatus.COOPMODE,increment,
+                    //      direction,delay,delayFactor,maxPosIndex,maxColorIndex,blackout);
+                    aStatus = new spinner.Status("Spinner","0",IStatus.SPINNER,
+                            sysMode,coOpMode,increment,true,delay,5,360/increment,14,false);
+                    appObj = selectApp(i, aStatus.getName());
+                    appObj.setStatus(aStatus);
+                    appObj.makeApp(aStatus);
+                }break;
+                case 2: {
+                    increment = 6;
+                    delay = 3;
+                    aStatus = new spinner.Status("Spinner","1",IStatus.SPINNER,
+                            sysMode,coOpMode,increment,true,delay,5,360/increment,14,false);
+                    appObj = selectApp(i, aStatus.getName());
+                    appObj.setStatus(aStatus);
+                    appObj.makeApp(aStatus);
+                }break;
+                case 4: {
+                    increment = 6;
+                    delay = 9;
+                    aStatus = new spinner.Status("Spinner","2",IStatus.SPINNER,
+                            sysMode,coOpMode,increment,true,delay,5,360/increment,14,false);
+                    appObj = selectApp(i, aStatus.getName());                    
+                    appObj.setStatus(aStatus);
+                    appObj.makeApp(aStatus);
+                }break;
+                case 6: {
+                    increment = 6;
+                    delay = 27;                    
+                    aStatus = new spinner.Status("Spinner","3",IStatus.SPINNER,
+                            sysMode,coOpMode,increment,true,delay,5,360/increment,14,false);
+                    appObj = selectApp(i, aStatus.getName());                    
+                    appObj.setStatus(aStatus);
+                    appObj.makeApp(aStatus);
+                }break;
+                case 1: {
+                    name = "Liner";
+                    increment = 6;
+                    delay = 1;
+                    aStatus = new liner.Status("Liner","0",'a',IStatus.LINER,
+                            sysMode,coOpMode,increment,true,delay,5,200,14,false);
+                    appObj = selectApp(i, aStatus.getName());
+                    appObj.setStatus(aStatus);
+                    appObj.makeApp(aStatus);
+                }break;
+                case 3: {
+                    increment = 6;
+                    delay = 3;
+                    aStatus = new liner.Status("Liner","1",'b',IStatus.LINER,
+                            sysMode,coOpMode,increment,true,delay,5,100,14,false);
+                    appObj = selectApp(i, aStatus.getName());                    
+                    appObj.setStatus(aStatus);
+                    appObj.makeApp(aStatus);
+                }break;
+                case 5: {
+                    increment = 6;
+                    delay = 9;
+                    aStatus = new liner.Status("Liner","2",'c',IStatus.LINER,
+                            sysMode,coOpMode,increment,true,delay,5,100,14,false);
+                    appObj = selectApp(i, aStatus.getName());                    
+                    appObj.setStatus(aStatus);
+                    appObj.makeApp(aStatus);
+                }break;
+                case 7: {
+                    increment = 6;
+                    delay = 27;
+                    aStatus = new liner.Status("Liner","3",'d',IStatus.LINER,
+                            sysMode,coOpMode,increment,true,delay,5,100,14,false);
+                    appObj = selectApp(i, aStatus.getName());                    
+                    appObj.setStatus(aStatus);
+                    appObj.makeApp(aStatus);
+                }break;
+                default:{
+                    increment = 6;
+                    delay = 1;
+                    aStatus = new liner.Status("Liner","n",'e',IStatus.LINER,
+                            sysMode,coOpMode,increment,true,delay,5,100,14,false);
+                    appObj = selectApp(i, aStatus.getName());                    
+                    appObj.setStatus(aStatus);
+                    appObj.makeApp(aStatus);
+                }
+            }  
+            System.out.println("AppServer.makeDatabase(): "+i+" "+appObj);
+            dbManager.saveSetup(i,appObj);
         }
     }
     
@@ -67,90 +174,85 @@ public class AppServer implements IServer{
     }
     public void setSysMode(int val) {
         sysMode = val;
-        makeSetup();
-    }    
- //--------------------------------------------------------    
-   public synchronized IStatus getStartupStatus(int i){
-        IStatus status = new Status();
-        status = dbManager.getStatus(i);
-        System.out.println("AppServer getStartupStatus(): "+status);
-        return status;
-    }   
-    public synchronized IRecord getRunningRecord(int i){
-        IRecord record = new Record();
-        record = dbManager.getRecord(i);
-        System.out.println("AppServer getRunningRecord(): "+record);
-        return record;
     }
-  
-    public IRecord cycleEnded(int i){
-        //PRE:  aRecord from the app object
-        //      This has all the data needed to define the current state of
-        //      the app(i), which can be used together with Status(i)
-        //      to update the record.
-        //POST: A new record is returned
-        // First get the record and note the mode
-        // Different modes show problems of mutual exclusion etc
-        Record record = new Record();
-        switch(sysMode){
-            // Decide whether to do anything special depending on mode
-            case IStatus.NORMAL:
-                record = update(i,0);
-                return record;                     
-            case IStatus.CONFLICT: 
-                record = update(i,100);
-                return record;
-            case IStatus.SAFE:
-                synchronized (this){
-                    record = update(i,0);
-                    return record;
-                }
-            case IStatus.PRODUCER_CONSUMER:
-                synchronized (this){
-                    record = update(i,500);
-                    return record;
-                }
-            default:                 
-                synchronized (this){
-                    record = update(i,500);
-                    return record;
-                }
-        }
+    //?synchronized?
+    public IAppObj getAppObj(int i) {
+        return dbManager.getAppObj(i);
     }
     
-    private Record update(int i, int sleepTime){        
-        //Now we do the job requested by the app client.
-        //  called with: record.getPosIndex() == endOfCycle
-        //  where endOfCycle = maxPosIndex for forward and 0 for reverse
-         Record record = new Record();
-         record = (Record)dbManager.getRecord(i);
-        // Reset the posIndex
-        record.setPosIndex(0); //depending on direction
-        // increment the colour index
-        record.setColorIndex(record.getColorIndex() + 1);
-        if (record.getColorIndex() == aStatus.getMaxColorIndex()){ 
-            //also may depend on app
-            // if all colours done, start again
-            record.setColorIndex(0);
-            //if ((record).incCount|2 == 0){
-            // (record).setDirection(true)}
-            //else (record).setDirection(false);
+    public IRecord cycleEnded(int i){
+        //Now we do the job requested by the appController.
+        //PRE:  index 'i' from the appController to locate appObj[i] in the
+        //      database.  appObj[i].record has all the data needed to define
+        //      the current state of app(i), which can be used together 
+        //      with Status(i) to update the record.
+        //POST: A new record is returned
+        // First note the sysMode
+        // Different modes show problems of mutual exclusion etc
+        // Non-zero sleep times before starting a new cycle help to
+        // ensure that clashes will occur if the system is unsafe.
+        int sleepTime = 0;
+        IAppModel appModel;
+//        IRecord record;
+        switch(sysMode){
+            // Decide whether to do anything special depending on mode
+            case IStatus.NORMAL:{
+                sleepTime = 0;
+                appModel = dbManager.getAppModel(i);
+                aRecord = appModel.update(dbManager.getRecord(i));
+                dbManager.setRecord(i, aRecord);
+                return aRecord;
+            }//break;    
+            case IStatus.CONFLICT:{
+                sleepTime = 10;
+                appModel = dbManager.getAppModel(i);
+                aRecord = appModel.update(dbManager.getRecord(i)); 
+                    try{
+                        Thread.sleep(sleepTime);
+                    }catch(InterruptedException e){
+                        System.out.println("Interrupted sleep");
+                    }
+                dbManager.setRecord(i, aRecord);
+                return aRecord;
+            }// break;
+            case IStatus.SAFE:{
+                synchronized (this){
+                    sleepTime = 20;
+                    appModel = dbManager.getAppModel(i);
+                    aRecord = appModel.update(dbManager.getRecord(i));                                       
+                        try{
+                            Thread.sleep(sleepTime);
+                        }catch(InterruptedException e){
+                            System.out.println("Interrupted sleep");
+                        }
+                    dbManager.setRecord(i, aRecord);
+                    return aRecord;
+                }
+            }// break;
+            case IStatus.PRODUCER_CONSUMER:{
+                synchronized (this){
+                    sleepTime = 0;
+                    appModel = dbManager.getAppModel(i);
+                    aRecord = appModel.update(dbManager.getRecord(i));                                       
+                    dbManager.setRecord(i, aRecord);
+                }
+            } break;
+            default:                 
+                synchronized (this){
+                    sleepTime = 0;
+                    appModel = dbManager.getAppModel(i);
+                    aRecord = appModel.update(dbManager.getRecord(i));                                       
+                    dbManager.setRecord(i, aRecord);
+                }
         }
-        try{
-            Thread.sleep(sleepTime);
-        }catch(InterruptedException e){
-            System.out.println("Interrupted sleep");
-        }
-        dbManager.setRecord(i, record);
-        System.out.println("appServer cycleEnded: "+i);
-    return record;
-    }    
-
+        System.out.println("appServer cycleEnded: "+i+" "+aRecord+" dbMan: "+dbManager.getRecord(i));
+    return aRecord;            
+    }
+    
     //Used in remote mode
     public String messageSent(String m){
         return m;
-    }
-    
+    }    
 }
 
 ///////////////////////////////////////

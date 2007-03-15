@@ -6,8 +6,8 @@ package linkserver;
 import appdata.*;
 import interfaces.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.Observable;
+import liner.Record;
+import liner.Status;
 
 /**
  * 'InterServer' stub
@@ -19,7 +19,7 @@ import java.util.Observable;
  * @author Roger Prowse
  * @version "%I%, %G%"
  */
-public class InterServer implements IClient{
+public class InterServer{
     IServer refServer;
     int clientCount;
     int sysMode;
@@ -66,27 +66,23 @@ public class InterServer implements IClient{
             IStatus status = new Status();
             IRecord record = new Record();            
             char name = command.getName();  
-            int i = command.getId();
+            int i = command.getIndex();
             System.out.println("InterServer getMessage() Command: "+ name + i);            
             switch(name){
-                case 's': {
-                    status = refServer.getStartupStatus(i);
-//                    status.setIncrement(incr);//rwp - updates status for link
-                    System.out.println("link|InterServer get(s) Status: "+status);
-                    simpleServer.sendToAllClients(status);
-                    break;
-                }
-                case 'r': {
-                    record = refServer.getRunningRecord(i);
-//                    record.setPosIndex(incr);//rwp
-                    System.out.println("link|InterServer get(r) Record:"+record);
-                    simpleServer.sendToAllClients(record);
-                    break;
-                }
+//                case 's': {
+//                    status = refServer.getStatus(i);
+////                    status.setIncrement(incr);//rwp - updates status for link
+//                    System.out.println("link|InterServer get(s) Status: "+status);
+//                    simpleServer.sendToAllClients(status);
+//                    break;
+//                }
                  case 'e': {
-                    record = refServer.cycleEnded(i);
+//                    record = refServer.cycleEnded(i);
+                    record.setRecord(refServer.cycleEnded(i));                    
 //                    record.setPosIndex(incr);//rwp
-                    System.out.println("link|InterServer get(e) Record:"+record);
+                    System.out.println("link|InterServer get(e) Record:"+record+
+                            " getPosIndex() "+record.getPosIndex());
+                    
                     simpleServer.sendToAllClients(record);
                     break;
                  }
@@ -107,6 +103,19 @@ public class InterServer implements IClient{
                     simpleServer.sendToAllClients(sysMode);
                     break;
                  }
+                 case 'd': {
+                    refServer.makeDatabase();
+                    System.out.println("link|InterServer 'd' makeDatabase()");
+                    liste.add("makeDatabase()");                              
+                    break;
+                 }
+                 case 'a': {
+                    Object appObj = refServer.getAppObj(i);
+                    System.out.println("link|InterServer 'a' getAppObj()");
+                    liste.add("getAppObj()");                              
+                    simpleServer.sendToAllClients((IAppObj)appObj);
+                    break;
+                 }
                  
                 default: {
                     simpleServer.sendToAllClients(msg); 
@@ -115,26 +124,6 @@ public class InterServer implements IClient{
             }
         }
     }  
-
-//---------------------------------------------------------------    
-    //Dummy methods to satisfy IClient interface
-    public void initSys(){}
-    public void initClient(){}
-    public void startClient(){}
-    public int getSysMode(){
-        return 0;}
-    public int getCount(){
-        return clientCount;}
-    public Observable getObservable(int i){
-        return new Observable();}
-    public ActionListener getListener(int i){
-            class Listener implements ActionListener{
-                public Listener(){}
-                public void actionPerformed(ActionEvent e){}
-            }
-        return new Listener();
-    }
-
 }//InterServer
 /////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////

@@ -14,7 +14,7 @@ package interfaces;
  * @author Roger
  */
 public interface IServer {
-//    public void makeSetup();
+//    public void makeDatabase();
     public String [] getArgs();
     public void initServer(int c, int m);
     
@@ -24,10 +24,15 @@ public interface IServer {
     public int getClientCount();
     public void setClientCount(int i);
 
-    public IStatus getStartupStatus(int i);    
-    public IRecord getRunningRecord(int i);
+    public IAppObj getAppObj(int i);
+//    public IAppController getAppController(int i);    
+//    
+//    public IStatus getStatus(int i);    
+//    public IRecord getRecord(int i);
 
     public IRecord cycleEnded(int i);
+    
+    public void makeDatabase();
     
     public String messageSent(String m);
     

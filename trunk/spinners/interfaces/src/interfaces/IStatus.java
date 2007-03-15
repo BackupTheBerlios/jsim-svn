@@ -29,19 +29,23 @@ public interface IStatus {
     final static int DELAY_FACTOR = 4;   
     final static int SEQUENCER = 5;
    
+//    public void makeStatus(String name, String id, int mode);
     public IStatus getStatus();
-    public void setStatus(IStatus status);
-    public void makeStatus(int i, int mode);
+//    public void setStatus(String name, String id, int function,
+//            int mode, int coOpMode,
+//                int increment, boolean direction, int delay, int delayFactor,
+//                     int maxPosIndex, int maxColorIndex, boolean blackOut);
+    public void copyStatus(IStatus fromStatus);
 
-    public char getName();
-    public void setName(char val);
+    public String getName();
+    public void setName(String val);
     
-    public int getId();
-    public void setId(int val);    
+    public String getId();
+    public void setId(String val);    
 
     public int getFunction();
-    public void setFunction(int val);    
-
+    public void setFunction(int val); 
+    
     public int getMode();
     public void setMode(int val);        
 

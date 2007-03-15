@@ -10,16 +10,15 @@ import java.awt.*;		// for Color
 public interface IRecord extends Serializable{
     public IRecord getRecord();
     public void setRecord(IRecord aRecord);
-    public void setRecord(int i);
-    public void copyRecord(IRecord fromRecord, IRecord toRecord);
 
-    public char getName();
+    public String getName();
+    public void setName(String name);
     
-    public int getId();
-    public void setId(int Id);
+    public String getId();
+    public void setId(String id);
     
     public int getMode();
-    public void setMode(int newMode);
+    public void setMode(int mode);
     
     public int getPosIndex();
     public void setPosIndex(int newValue);

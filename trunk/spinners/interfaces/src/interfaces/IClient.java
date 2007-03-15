@@ -11,19 +11,18 @@ package interfaces;
 
 import java.awt.event.ActionListener;
 import java.util.Observable;
-//import linkserver.SimpleServer;
 
 /**
  *
  * @author Roger
  */
 public interface IClient {
-    public void initClient();
-    public void initSys();
-    public void startClient();
-    public Observable getObservable(int i);
+    public void startClient(IMainForm mainForm);
+
     public int getSysMode();
+    public void setSysMode(int val);    
     public int getCount();
-    public ActionListener getListener(int i);
+    public void setCount(int val);
+
 }
 

@@ -4,6 +4,8 @@ package linkclient;
 import appdata.*;
 import interfaces.*;
 import java.awt.*;
+import liner.Record;
+import liner.Status;
 
 /**
  * 'InterClient' stub
@@ -55,14 +57,11 @@ public class InterClient implements IServer{
         //Here we provide the count and mode to the server
         setClientCount(c);
         setSysMode(m);
-    }
-    
-
-    public void makeSetup(){        
+        makeDatabase();
     }
  
 ////////////////////////////////////////////////////
-    public synchronized IStatus getStartupStatus(int i){
+    public synchronized IStatus getStatus(int i){
         /*Make connection
          *Send message to get status*/
         IStatus status = new Status();
@@ -83,7 +82,7 @@ public class InterClient implements IServer{
         return status;
     }
     
-    public synchronized IRecord getRunningRecord(int i){
+    public synchronized IRecord getRecord(int i){
         /*Make connection
          *Send message to get record*/
         Record record = new Record();
@@ -101,6 +100,25 @@ public class InterClient implements IServer{
          //Receive record        
         return record;
     }
+    
+    public synchronized IAppObj getAppObj(int i){
+//        /*Make connection
+//         *Send message to get record
+        Object appObj = new Object();
+        try {
+            Command command = new Command('a', i);
+            simpleClient.checkedSendToServer(command);            
+            appObj = (IAppObj)simpleClient.getReply();
+        }
+        catch (Exception ex)
+        {
+          liste.add(ex.toString());
+          liste.makeVisible(liste.getItemCount()-1);
+          liste.setBackground(Color.yellow);
+        }         
+         //Receive record        
+        return (IAppObj)appObj;
+    }   
     
     public int getClientCount(){
         return clientCount;
@@ -143,6 +161,23 @@ public class InterClient implements IServer{
           liste.setBackground(Color.yellow);
         }         
     }
+    public synchronized void makeDatabase() {
+        /*Send message to populate Database*/
+        try {
+            Command command = new Command('d',0);
+            char c = command.getName();
+            System.out.println("link|InterClient makeDatabase = "+ c);            
+            simpleClient.checkedSendToServer(command);
+            //no need to do anything with this return mode
+            //int sysMode = (Integer)simpleClient.getReply();
+        }
+        catch (Exception ex)
+        {
+          liste.add(ex.toString());
+          liste.makeVisible(liste.getItemCount()-1);
+          liste.setBackground(Color.yellow);
+        }         
+    }
         
     ///////////////////////////////////////
     public synchronized IRecord cycleEnded(int i){
@@ -151,11 +186,13 @@ public class InterClient implements IServer{
         Record record = new Record();
         try {
             Command command = new Command('e', i);
+            char c = command.getName();
+            System.out.println("InterClient cycleEnded() = "+c);//+"  "+
             simpleClient.checkedSendToServer(command);
             record = (Record)simpleClient.getReply();
-            System.out.println("InterClient cycleEnded(): "+record+"  "+
-                record.getName()+record.getId()+
-                record.getPosIndex()+record.getColorIndex());            
+            System.out.println("InterClient cycleEnded(): "+record);//+"  "+
+//                record.getName()+record.getId()+
+//                record.getPosIndex()+record.getColorIndex());            
         }
         catch (Exception ex)
         {

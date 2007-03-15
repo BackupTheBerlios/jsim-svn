@@ -60,7 +60,7 @@ public class AppClient implements IClient{
         appRunners = new AppRunner[clientCount];                
         runnerThreads = new Thread[clientCount];
         for (int i = 0; i < clientCount; i++){
-            appRunners[i] = new AppRunner(refServer,i,sysMode);
+            appRunners[i] = new AppRunner(refServer,i);
             //Attach appRunners[i].AppController to threads
             //and give names to help debugging
             //Use java.lang.Integer.toString(int i)

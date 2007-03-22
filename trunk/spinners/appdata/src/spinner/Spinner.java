@@ -10,8 +10,6 @@ import java.util.Observable;
 /**
  * 
  * 
- * 
- * 
  * @author Roger Prowse
  */
 public class Spinner implements IAppObj, Serializable{
@@ -22,16 +20,13 @@ public class Spinner implements IAppObj, Serializable{
 
     // Constructor
     public Spinner(){
-        spinnerModel = new SpinnerModel();
-        spinnerController = new SpinnerController(); 
-        status = new Status();
-        record = new Record();    
+        status = new Status();   
     }
 
     public void makeApp(IStatus status){
         setStatus(status);
-        makeAppModel(status);
-        makeAppController();
+        spinnerModel = new SpinnerModel(status.getMaxColorIndex());
+        spinnerController = new SpinnerController(); 
         //make runningRecord: name,id,mode,posIndex,colorIndex
         record = new Record(status.getName(),status.getId(),
                 status.getMode(),8,9);
@@ -45,18 +40,12 @@ public class Spinner implements IAppObj, Serializable{
     public void setAppModel(IAppModel spinnerModel){
         this.spinnerModel = spinnerModel;
     }
-    public void makeAppModel(IStatus status){
-        this.status = status;
-        spinnerModel.setMaxColorIndex(status.getMaxColorIndex());
-    }
 
     public IAppController getAppController(){
         return spinnerController;
     }
     public void setAppController(IAppController spinnerController){
         this.spinnerController = spinnerController;
-    }
-    public void makeAppController(){
     }
     
     public IStatus getStatus(){
@@ -78,7 +67,8 @@ public class Spinner implements IAppObj, Serializable{
 class SpinnerModel implements IAppModel, Serializable{
     int maxColorIndex;
     
-    SpinnerModel(){                        
+    SpinnerModel(int val){
+        maxColorIndex = val;
     }
 
     public IRecord update(IRecord record){

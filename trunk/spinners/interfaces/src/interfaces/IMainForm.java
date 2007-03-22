@@ -16,5 +16,5 @@ import javax.swing.JPanel;
  * @author Roger
  */
 public interface IMainForm {
-    public IGUIPanel getGUIPanel();
+
 }

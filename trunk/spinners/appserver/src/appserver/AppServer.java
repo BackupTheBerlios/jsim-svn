@@ -62,7 +62,7 @@ public class AppServer implements IServer{
     }
  
     public void makeDatabase() {
-        dbManager = new DBManager(clientCount);
+        dbManager = new DBManager();
         String name;
         IAppObj appObj;
 //        IStatus status;

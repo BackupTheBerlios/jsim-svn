@@ -31,13 +31,13 @@ public class DisplayCanvas extends Canvas implements Observer{
     /**
      * Creates a new instance of displayCanvas
      */
-    public DisplayCanvas(int i, IAppController appController) {
+    public DisplayCanvas(IAppController appController) {
         setBackground(Color.black);
         initialSize = getSize();
         
         // 'this' displayCanvas needs to observe changes in the relevant
         // 'Observable' activity or a clientInLink using
-        //	getObservable(i) as defined in class 'appRunner'
+        //	getObservable() as defined in class 'appController'
         Observable theObservable = (Observable)appController.getObservable();
         theObservable.addObserver(this);        
     }
@@ -55,7 +55,5 @@ public class DisplayCanvas extends Canvas implements Observer{
         size = getSize();
         refAppController.generateNextImage(size,g);
     }
-
-
 }
 

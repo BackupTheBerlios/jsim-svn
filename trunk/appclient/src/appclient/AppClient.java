@@ -9,10 +9,8 @@
 
 package appclient;
 
-import interfaces.IAppObj;
+import interfaces.IAppController;
 import interfaces.IClient;
-import interfaces.IGUIPanel;
-import interfaces.IMainForm;
 import interfaces.IServer;
 
 /**
@@ -48,14 +46,13 @@ public class AppClient implements IClient{
             System.out.println("Invalid format -- select 0");
         }
         refServer = appServer;
-}
-       
+    }       
      /* 
      * Instantiate the appRunners and attach to threads
      * Link the GUI to each ViewPanel and start the threads
      */
-     public void startClient(IMainForm mainForm){
-        System.out.println("AppClient.startClient(): clientCount = "+clientCount);//**
+     public void initClient(){
+        System.out.println("AppClient.initClient(): clientCount = "+clientCount);
         //make Threads;
         appRunners = new AppRunner[clientCount];                
         runnerThreads = new Thread[clientCount];
@@ -66,16 +63,16 @@ public class AppClient implements IClient{
             //Use java.lang.Integer.toString(int i)
             String threadName = Integer.toString(i);
             runnerThreads[i] = 
-                    new Thread((Runnable)appRunners[i].getAppController(),threadName);
-            
-            IGUIPanel aGUIPanel = mainForm.getGUIPanel();
-            aGUIPanel.addViewPanel(i,appRunners[i]);            
+                new Thread((Runnable)appRunners[i].getAppController(),threadName);            
+        }        
+    } 
+     public void startClient(){
+        for (int i = 0; i < clientCount; i++){
             //Start the Threads: execute thread[i].run()
-            System.out.println("appClient.startClient() "+threadName);
+            System.out.println("appClient.startClient() "+i);
             runnerThreads[i].start();
         }        
     }
-    
     /**
      * Allows the number of activities to be passed to GUI
      * 
@@ -86,8 +83,7 @@ public class AppClient implements IClient{
     }
     public void setCount(int val){
         clientCount = val;
-    }
-    
+    }   
     /**
      * Allows the system mode to be passed to GUI
      * 
@@ -98,6 +94,14 @@ public class AppClient implements IClient{
     }
     public void setSysMode(int val){
         this.sysMode = val;
+    }
+    /**
+     * Allows reference to the appController to be passed to GUI
+     * 
+     * @return appController[i]
+     */
+    public IAppController getViewable(int i){
+        return appRunners[i].getAppController();
     }
 }//AppClient
 /////////////////////////////////////////////////////////////////////////////

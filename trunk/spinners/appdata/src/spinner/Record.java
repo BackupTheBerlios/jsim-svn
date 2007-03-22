@@ -101,44 +101,6 @@ public class Record implements IRecord, Serializable{// , Cloneable{
         colorIndex += 1;
         return colorIndex;
     }
-    
-//    public String toString(){
-//      String s = "Record: "/*+this+"  "*/+name+id+" "+mode+"  "+posIndex+" "+colorIndex;
-//        return s;
-//    }
-
-
-/*    
-    public void fromString(String s){
-        String[] subStr;
-        subStr = serializer.ExtractSubstrings(s);
-
-        name = subStr[0].charAt(0);
-        id = Integer.parseInt(subStr[1]);
-        mode = Integer.parseInt(subStr[2]);
-        posIndex = Integer.parseInt(subStr[3]);
-        colorIndex = Integer.parseInt(subStr[4]);
-    }
-    
- */
-}//Record
-/*      ///////////////////////////////////////////////////////////////////////
- * Note on Cloning:
-        // NB: The following technique returns a clone of the stored record,
-        // since the original record may be changed by any other process sharing
-        // the record memory, before the process actually gets round to sending
-        // it to the Observer.
-        // This applies to mode 2, and to the Consumer in mode 3 (but not to the
-        // Producer, as it is the only one to change the shared record).
-        ///////////////////////////////////////////////////////////////////////
- *      public synchronized Record getRecord(){
-            try{
-                return (Record) super.clone();
-            }catch(CloneNotSupportedException e){
-                System.out.println("Cloning not allowed");
-                return this;
-            }
-        {
- */
+}
 
 

@@ -16,7 +16,7 @@ import java.util.*;
 public class Database{
     private ArrayList theDatabase;
     
-    public Database(int clientCount) {
+    public Database() {
         theDatabase = new ArrayList();
     }
     public void setUp(int i, IAppObj appObj){

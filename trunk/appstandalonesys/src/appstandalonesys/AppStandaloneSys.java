@@ -40,7 +40,7 @@ public class AppStandaloneSys extends JFrame implements IMainForm{
   private IClient appClient;
   private boolean init;
   
-  private Button startB =     new Button("Start");
+  private Button openB =     new Button("Open");
   private Button exitB =      new Button("Exit");
   private TextField count =   new TextField("8");
   private TextField mode =    new TextField("2");  
@@ -82,10 +82,10 @@ public class AppStandaloneSys extends JFrame implements IMainForm{
       }
     });
 
-    startB.addActionListener(new ActionListener() {
+    openB.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e)
       {
-        start();
+        open();
       }
     });
 
@@ -97,7 +97,7 @@ public class AppStandaloneSys extends JFrame implements IMainForm{
     bottom.add(count);
     bottom.add(modeLB);
     bottom.add(mode);        
-    bottom.add(startB);
+    bottom.add(openB);
     bottom.add(exitB);
 
     setLayout(new BorderLayout(5,5));
@@ -107,50 +107,42 @@ public class AppStandaloneSys extends JFrame implements IMainForm{
     System.out.println("GUI: made mainFrame ");            
   }
   
-  private void initGUIFrame(){
-    int n = appClient.getCount()<2?2:appClient.getCount()+1; 
-    setSize(200*n/2,600);    
-    theGUIPanel = new GUIPanel(this,appClient);      
+  private void initGUIPanel(){
+    theGUIPanel = new GUIPanel(this,appClient);
     add("Center", theGUIPanel);
     setVisible(true);
-    super.setTitle(title1+" "+appClient.getSysMode()+".  "+title2);
   }
 
-  public void start(){
+  public void open(){
     try {
-      System.out.println("mainForm.start()");
-
+      System.out.println("System.open()");
       if (init == true){
           int clientCount = Integer.parseInt(count.getText());
           int sysMode = Integer.parseInt(mode.getText());
           appClient.setCount(clientCount);
           appClient.setSysMode(sysMode);
-          //Pass client args to local server to make DB
+          //Set Frame size to at least 200 else dependent on clientCount.
+          int n = clientCount<2?1:(clientCount+1)/2; 
+          setSize(200*n,600);    
+          super.setTitle(title1+" "+appClient.getSysMode()+".  "+title2);
+          
+         //Pass client args to local server to make DB
           appServer.initServer(clientCount, sysMode);
-
-          initGUIFrame();
-          appClient.startClient(this);         
+          appClient.initClient();         
+          initGUIPanel();
+          appClient.startClient();
 
           init = false;
-          System.out.println("Done mainForm.start()");
+          System.out.println("Done App.open()");
       }
     }
     catch (Exception ex)
     {
-          System.out.println("mainForm.start() "+ex.toString());
+          System.out.println("App.open() "+ex.toString());
     }
   }
 
   public void quit(){
     System.exit(0);
   }
-/*    //////////////////////////////////
-    // Identify Button[i] as an event source
-    public JToggleButton getEventSource(int i){
-        return theGUIPanel.getEventSource(i);
-    }
-*/   
-    public IGUIPanel getGUIPanel(){
-        return theGUIPanel;
-    }  
 }

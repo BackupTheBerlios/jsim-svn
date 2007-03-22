@@ -18,11 +18,9 @@ public interface IAppObj {
     
     public IAppModel getAppModel();    
     public void setAppModel(IAppModel appModel);   
-    public void makeAppModel(IStatus val);
     
     public IAppController getAppController();    
     public void setAppController(IAppController appController);   
-    public void makeAppController();
     
     public IStatus getStatus();    
     public void setStatus(IStatus status);

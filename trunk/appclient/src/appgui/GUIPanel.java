@@ -16,17 +16,17 @@ import java.awt.*;	// for GridLayout
 //		27 Nov 2002: v2: 	Issued in gui package
 ///////////////////////////////////////////////////////////////////////////
 
-public class GUIPanel extends JPanel implements IGUIPanel{
-    // Set up the GUIPanel panel comprising N view panels for the activities
+public class GUIPanel extends JPanel{
+    // Set up the GUIPanel panel comprising N view panels for the client activities
     JFrame refFrame;
-    int activityCount;
+    int clientCount;
     private ViewPanel[] theViewPanels;
     
-    public GUIPanel(JFrame aFrame, IClient aClient){
+    public GUIPanel(JFrame aFrame, IClient appClient){
         refFrame = aFrame;
-        activityCount = aClient.getCount();
-        System.out.println("GUIPanel = "+this+" activityCount = " + activityCount);
-        theViewPanels = new ViewPanel[activityCount];
+        clientCount = appClient.getCount();
+        System.out.println("GUIPanel = "+this+" clientCount = " + clientCount);
+        theViewPanels = new ViewPanel[clientCount];
 
         ////////////////////////////////////////
         // Now set up the mainPane,
@@ -35,26 +35,22 @@ public class GUIPanel extends JPanel implements IGUIPanel{
         setBorder(BorderFactory.createEtchedBorder(Color.white, Color.blue));
         setBackground(Color.white);
         setLayout(new GridLayout(2,2,20,20));
+        for (int i = 0; i < clientCount; i++){
+            // Instantiate the objects in the GUIPanel
+            // First build the ViewPanels, passing to them a reference
+            // to the associated 'Client.Controller' object
+            theViewPanels[i] = new ViewPanel(i, appClient.getViewable(i));
+            System.out.println("GUI: Add viewPanel " + i);
+            // Add this panel to the GUIPanel
+            this.add(theViewPanels[i]);
+        }
     }
     
-    public void addViewPanel(int i, IAppRunner appRunner){
-        // Instantiate the objects in the GUIPanel
-        // First build the ViewPanels, passing to them a reference
-        // to the associated 'Client.Controller' object
-        IAppController appController = appRunner.getAppController();
-        theViewPanels[i] = new ViewPanel(i, appController);
-        System.out.println("GUI: Add viewPanel " + i);
-        //Add this panel to the GUIPanel
-        this.add(theViewPanels[i]);
-        //and make the panel visible.
-        refFrame.setVisible(true);
+    public int getClientCount() {
+        return clientCount;
     }
-    
-    public int getActivityCount() {
-        return activityCount;
-    }
-    public void setActivityCount(int val) {
-        this.activityCount = val;
+    public void setClientCount(int val) {
+        this.clientCount = val;
     }
 }// GUIPanel
 

@@ -17,8 +17,9 @@ import java.util.Observable;
  * @author Roger
  */
 public interface IClient {
-    public void startClient(IMainForm mainForm);
-
+    public void initClient();
+    public void startClient();
+    public IAppController getViewable(int i);
     public int getSysMode();
     public void setSysMode(int val);    
     public int getCount();

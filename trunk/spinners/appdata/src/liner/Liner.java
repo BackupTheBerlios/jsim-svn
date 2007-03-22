@@ -30,16 +30,13 @@ public class Liner implements IAppObj, Serializable{
 
     // Constructor
     public Liner(){
-        linerModel = new LinerModel();
-        linerController = new LinerController(); 
-        status = new Status();
-        record = new Record();    
+        status = new Status();  
     }
 
     public void makeApp(IStatus status){
         setStatus(status);
-        makeAppModel(status);
-        makeAppController();
+        linerModel = new LinerModel(status.getMaxColorIndex());
+        linerController = new LinerController(); 
         //make runningRecord: name,id,mode,posIndex,colorIndex
         record = new Record(status.getName(),status.getId(),
                 status.getMode(),8,9);
@@ -53,18 +50,12 @@ public class Liner implements IAppObj, Serializable{
     public void setAppModel(IAppModel linerModel){
         this.linerModel = linerModel;
     }
-    public void makeAppModel(IStatus status){
-        this.status = status;
-        linerModel.setMaxColorIndex(status.getMaxColorIndex());
-    }
 
     public IAppController getAppController(){
         return linerController;
     }    
     public void setAppController(IAppController linerController){
         this.linerController = linerController;
-    }
-    public void makeAppController(){
     }
     
     public IStatus getStatus(){
@@ -85,12 +76,9 @@ public class Liner implements IAppObj, Serializable{
 class LinerModel implements IAppModel, Serializable{
     int maxColorIndex;
     
-    LinerModel(){                        
+    LinerModel(int val){
+        maxColorIndex = val;
     }
-
-//    void makeLinerModel(IStatus status){
-//        maxColorIndex = status.getMaxColorIndex();                        
-//    }
 
     public IRecord update(IRecord record){
         // Called at endOfCycle

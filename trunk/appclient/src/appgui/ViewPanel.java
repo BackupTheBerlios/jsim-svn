@@ -35,21 +35,21 @@ public class ViewPanel extends JPanel{
         mode = appController.getMode();
         listener = appController.getListener();
         ////////////////////////////////////////
-        // Now set up an activity panel,
+        // Now set up a view panel,
         // and setBackground, size and border
         // Set grid 1 row, 2 columns, spacing 10 horiz, 50 vert
         setBorder(BorderFactory.createEtchedBorder(Color.white, Color.blue));
         setLayout(new GridLayout(1,2,20,20));
-        // Instantiate the objects in the activityPanel
-        // and add to the activityPanel
+        // Instantiate the objects in the viewPanel
+        // and add to the viewPanel
         theParameterPanel = new ParameterPanel(name, id, mode, listener);
         add(theParameterPanel);
-        System.out.println("activityPanel: Add parameterPanel " + i);
+        System.out.println("viewPanel: Add parameterPanel " + i);
         
-        // Build the display canvas and add to the activityPanel
-        theDisplayCanvas = new DisplayCanvas(i, appController);
+        // Build the display canvas and add to the viewPanel
+        theDisplayCanvas = new DisplayCanvas(appController);
         add(theDisplayCanvas);
-        System.out.println("activityPanel: Add display canvas " + i);
+        System.out.println("viewPanel: Add display canvas " + i);
     }
     
     public Insets getInsets(){// n,w,s,e
@@ -69,13 +69,6 @@ public class ViewPanel extends JPanel{
     public void setId(String val) {
         this.id = val;
     }
-
-//    public int getSysMode() {
-//        return sysMode;
-//    }
-//    public void setSysMode(int val) {
-//        this.sysMode = val;
-//    }
 
     public ActionListener getListener() {
         return listener;

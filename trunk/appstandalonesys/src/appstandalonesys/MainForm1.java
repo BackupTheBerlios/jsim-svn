@@ -50,7 +50,7 @@ public class MainForm1 extends JFrame implements IMainForm{
         System.out.println("initGUIFrame(): made mainForm ");
     }
         
-    public IGUIPanel getGUIPanel(){
+    public GUIPanel getGUIPanel(){
         return theGUIPanel;
     }
 }//MainForm1

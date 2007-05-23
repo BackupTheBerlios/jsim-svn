@@ -10,7 +10,9 @@
 package appclient;
 
 import interfaces.IAppController;
+import interfaces.IAppObj;
 import interfaces.IClient;
+import interfaces.IRecord;
 import interfaces.IServer;
 
 /**
@@ -22,8 +24,8 @@ public class AppClient implements IClient{
     int clientCount;
     int sysMode;
     
-    AppRunner[] appRunners;
-    Thread [] runnerThreads;
+    IAppController[] appControllers;
+    Thread [] controllerThreads;
 
     /**
      * 
@@ -48,29 +50,32 @@ public class AppClient implements IClient{
         refServer = appServer;
     }       
      /* 
-     * Instantiate the appRunners and attach to threads
+     * Instantiate the appControllers and attach to threads
      * Link the GUI to each ViewPanel and start the threads
      */
      public void initClient(){
         System.out.println("AppClient.initClient(): clientCount = "+clientCount);
         //make Threads;
-        appRunners = new AppRunner[clientCount];                
-        runnerThreads = new Thread[clientCount];
+        appControllers = new IAppController[clientCount];                
+        controllerThreads = new Thread[clientCount];
         for (int i = 0; i < clientCount; i++){
-            appRunners[i] = new AppRunner(refServer,i);
-            //Attach appRunners[i].AppController to threads
-            //and give names to help debugging
+            appControllers[i] = refServer.getAppController(i); //** need new()?
+            appControllers[i].setClient((IClient)this);
+//            IAppObj appObj = refServer.getAppObj(i);
+//            appControllers[i] = appObj.getAppController(); //** need new()?
+            //Attach appControllers[i].AppController to thread[i]
+            //and give name to help debugging
             //Use java.lang.Integer.toString(int i)
             String threadName = Integer.toString(i);
-            runnerThreads[i] = 
-                new Thread((Runnable)appRunners[i].getAppController(),threadName);            
+            controllerThreads[i] = 
+                new Thread((Runnable)appControllers[i],threadName);            
         }        
     } 
      public void startClient(){
         for (int i = 0; i < clientCount; i++){
             //Start the Threads: execute thread[i].run()
             System.out.println("appClient.startClient() "+i);
-            runnerThreads[i].start();
+            controllerThreads[i].start();
         }        
     }
     /**
@@ -101,8 +106,15 @@ public class AppClient implements IClient{
      * @return appController[i]
      */
     public IAppController getViewable(int i){
-        return appRunners[i].getAppController();
+        return appControllers[i];
     }
+    
+    public IRecord update(int i, char comm){
+        return refServer.cycleEnded(i,comm);                
+    }
+    
+
+   
 }//AppClient
 /////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////

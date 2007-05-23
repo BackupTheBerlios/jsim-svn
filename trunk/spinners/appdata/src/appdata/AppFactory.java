@@ -4,6 +4,7 @@ import interfaces.IAppObj;
 import java.util.HashMap;
 import java.util.Map;
 import liner.Liner;
+import painter.Painter;
 import spinner.Spinner;
 /*
  * AppFactory.java
@@ -27,6 +28,7 @@ public class AppFactory {
         theMap = new HashMap();
         theMap.put("Spinner", new Spinner());
         theMap.put("Liner", new Liner());
+        theMap.put("Painter", new Painter());
         // etc
     }
 

@@ -17,6 +17,7 @@ import java.io.Serializable;
  * @author Roger
  */
 public class Status implements IStatus, Serializable{
+    int index;
     String name;
     String id;
     int function;
@@ -27,16 +28,18 @@ public class Status implements IStatus, Serializable{
     int delay;
     int delayFactor;
     int maxPosIndex;
-    int maxColorIndex;
+    int maxFrameIndex;
     boolean blackOut;
     
     /**
      * Creates a new instance of Status
      */
     public Status(int i) {
+        index = i;
     }
  
     public Status(){
+        index = 0;
         name = "";
         id = "";
         function = 0;
@@ -47,14 +50,15 @@ public class Status implements IStatus, Serializable{
         delay = 1;
         delayFactor = 5;
         maxPosIndex = 0;
-        maxColorIndex = 0;
+        maxFrameIndex = 0;
         blackOut = false;
         System.out.println("Status: "+name+" Id = "+id);
     }
-    public Status(String name, String id, int function,
+    public Status(int i, String name, String id, int function,
             int mode, int coOpMode,
             int increment, boolean direction, int delay, int delayFactor,
-            int maxPosIndex, int maxColorIndex, boolean blackOut){
+            int maxPosIndex, int maxFrameIndex, boolean blackOut){
+        this.index = i;
         this.name = name;
         this.id = id;
         this.function = function;
@@ -65,11 +69,12 @@ public class Status implements IStatus, Serializable{
         this.delay = delay;
         this.delayFactor = delayFactor;
         this.maxPosIndex = maxPosIndex;
-        this.maxColorIndex = maxColorIndex;
+        this.maxFrameIndex = maxFrameIndex;
         this.blackOut = blackOut;
     }
     public IStatus getStatus(){
         Status toStatus = new Status();
+        toStatus.setIndex(index);
         toStatus.setName(name);
         toStatus.setId(id);
         toStatus.setFunction(function);
@@ -80,14 +85,15 @@ public class Status implements IStatus, Serializable{
         toStatus.setDelay(delay);
         toStatus.setDelayFactor(delayFactor);
         toStatus.setMaxPosIndex(maxPosIndex);
-        toStatus.setMaxColorIndex(maxColorIndex);
+        toStatus.setMaxFrameIndex(maxFrameIndex);
         toStatus.setBlackOut(blackOut);        
         return toStatus;
     }
-    public void setStatus(String name, String id, int function,
+    public void setStatus(int i, String name, String id, int function,
             int mode, int coOpMode,
                 int increment, boolean direction, int delay, int delayFactor,
-                     int maxPosIndex, int maxColorIndex, boolean blackOut){
+                     int maxPosIndex, int maxFrameIndex, boolean blackOut){
+        this.index = i;
         this.name = name;
         this.id = id;
         this.function = function;
@@ -98,24 +104,33 @@ public class Status implements IStatus, Serializable{
         this.delay = delay;
         this.delayFactor = delayFactor;
         this.maxPosIndex = maxPosIndex;
-        this.maxColorIndex = maxColorIndex;
+        this.maxFrameIndex = maxFrameIndex;
         this.blackOut = blackOut;
     }
+/*    
     public void copyStatus(IStatus fromStatus){
+        index = fromStatus.getIndex();
         name = fromStatus.getName();
         id = fromStatus.getId();
         mode = fromStatus.getMode();
         function = fromStatus.getFunction();
-        coOpMode = fromStatus.getCoOpMode();
+        coOpMode = ((Status)fromStatus).getCoOpMode();
         increment = fromStatus.getIncrement();
         direction = fromStatus.getDirection();
         delay = fromStatus.getDelay();
         delayFactor = fromStatus.getDelayFactor();
         maxPosIndex = fromStatus.getMaxPosIndex();
-        maxColorIndex = fromStatus.getMaxColorIndex();
+        maxFrameIndex = fromStatus.getMaxFrameIndex();
         blackOut = fromStatus.getBlackOut();
-    }    
-    
+    } 
+*/    
+    public int getIndex(){
+        return index;
+    }  
+    public void setIndex(int val) {
+        index = val;
+    }
+        
     public String getName(){
         return name;
     }
@@ -193,18 +208,18 @@ public class Status implements IStatus, Serializable{
         maxPosIndex = val;
     }
 
-    public int getMaxColorIndex() {
-        return maxColorIndex;
+    public int getMaxFrameIndex() {
+        return maxFrameIndex;
     }
-    public void setMaxColorIndex(int val) {
-        maxColorIndex = val;
+    public void setMaxFrameIndex(int val) {
+        maxFrameIndex = val;
     }
     
     //This allows the status values to be printed 
     public String toString(){
         String s = "Status "+name+" "+id+" "+function+" "+mode+" "+coOpMode+" "+increment+" "+
                 direction+" "+delay+" "+delayFactor+" "+maxPosIndex+" "+
-                maxColorIndex+" "+blackOut;
+                maxFrameIndex+" "+blackOut;
         return s;
     }
 /*
@@ -222,7 +237,7 @@ public class Status implements IStatus, Serializable{
         delay = Integer.parseInt(subStr[7]);
         delayFactor = Integer.parseInt(subStr[8]);
         maxPosIndex = Integer.parseInt(subStr[9]);
-        maxColorIndex = Integer.parseInt(subStr[10]);
+        maxFrameIndex = Integer.parseInt(subStr[10]);
         blackOut = Boolean.parseBoolean(subStr[11]);        
     }
 */ 

@@ -1,6 +1,6 @@
 // spinners_netbeans\appsys\server\Record.java
 //
-// A 'record' object is maintained by each spinner/shader and
+// A 'record' object is maintained by each application and
 // supplies parameters defining state.
 // There are no facilities for processing the Record here, only 
 // set() and get().
@@ -49,14 +49,14 @@ public class Record implements IRecord, Serializable{// , Cloneable{
         toRecord.setId(id);
         toRecord.setMode(mode);
         toRecord.setPosIndex(posIndex);
-        toRecord.setColorIndex(colorIndex);
+        toRecord.setFrameIndex(colorIndex);
         return toRecord;
      }     
     public synchronized void setRecord(IRecord fromRecord){
         id = fromRecord.getId();
         mode = fromRecord.getMode();
         posIndex = fromRecord.getPosIndex();
-        colorIndex = fromRecord.getColorIndex();
+        colorIndex = fromRecord.getFrameIndex();
     }
      
     public String getName(){
@@ -91,13 +91,13 @@ public class Record implements IRecord, Serializable{// , Cloneable{
         return posIndex;
     }        
     
-    public synchronized int getColorIndex(){
+    public synchronized int getFrameIndex(){
         return colorIndex;
     }    
-    public synchronized void setColorIndex(int newIndex){
+    public synchronized void setFrameIndex(int newIndex){
         colorIndex = newIndex;
     }    
-    public synchronized int incColorIndex(){
+    public synchronized int incFrameIndex(){
         colorIndex += 1;
         return colorIndex;
     }

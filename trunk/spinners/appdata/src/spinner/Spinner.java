@@ -13,6 +13,7 @@ import java.util.Observable;
  * @author Roger Prowse
  */
 public class Spinner implements IAppObj, Serializable{
+    IClient refClient;
     IAppModel spinnerModel;
     IAppController spinnerController;
     IStatus status;
@@ -25,11 +26,11 @@ public class Spinner implements IAppObj, Serializable{
 
     public void makeApp(IStatus status){
         setStatus(status);
-        spinnerModel = new SpinnerModel(status.getMaxColorIndex());
-        spinnerController = new SpinnerController(); 
+        spinnerModel = new SpinnerModel(((Status)status).getMaxFrameIndex());
         //make runningRecord: name,id,mode,posIndex,colorIndex
         record = new Record(status.getName(),status.getId(),
                 status.getMode(),8,9);
+        spinnerController = new SpinnerController(status,record); 
         System.out.println("Spinner makeApp(): "+
                 " "+spinnerModel+" "+spinnerController+" "+status+" "+record);
     }
@@ -61,8 +62,7 @@ public class Spinner implements IAppObj, Serializable{
     public void setRecord(IRecord record){
         this.record = record;
     }
-    
-    
+       
 ////////////////////////////////////////////
 class SpinnerModel implements IAppModel, Serializable{
     int maxColorIndex;
@@ -78,10 +78,10 @@ class SpinnerModel implements IAppModel, Serializable{
         // First reset the posIndex
         record.setPosIndex(0); //depending on direction
         // then increment the colour index
-        record.setColorIndex(record.getColorIndex() + 1);
-        if (record.getColorIndex() == maxColorIndex){ 
+        record.setFrameIndex(record.getFrameIndex() + 1);
+        if (record.getFrameIndex() == maxColorIndex){ 
             // all colours done, start again
-            record.setColorIndex(0);
+            record.setFrameIndex(0);
             //if ((record).incCount|2 == 0){
             // (record).setDirection(true)}
             //else (record).setDirection(false);
@@ -89,15 +89,18 @@ class SpinnerModel implements IAppModel, Serializable{
         return record;
     }
     
-    public void setMaxColorIndex(int val){
+    public void setMaxFrameIndex(int val){
         maxColorIndex = val;
     }
 }
 /////////////////////////////////////////////    
 class SpinnerController extends Observable 
         implements IAppController, Runnable, Serializable{
+    IClient refClient;
+    int i;
+    IStatus status;
+    IRecord record;
     ButtonSensor buttonSensor;
-    IAppRunner appRunner;
     // Attributes
     String name;
     String id;
@@ -128,17 +131,21 @@ class SpinnerController extends Observable
     boolean newCycle;
     
     // Constructor
-    public SpinnerController(){
-    }    
-    public void startController(IAppRunner appRunner, IStatus status){
-        this.appRunner = appRunner;
+    public SpinnerController(IStatus status, IRecord record){
+        this.status = status;
+        this.record = record;
+        startController(status);
+        System.out.println("Made SpinnerController "/*+i*/);
+    }
+    
+    public void startController(IStatus status){
         name = status.getName();
         id = status.getId();
         mode = status.getMode();
         increment = status.getIncrement();
         maxPosIndex = status.getMaxPosIndex(); 
-        maxColorIndex = status.getMaxColorIndex();       
-        theDirection = status.getDirection();
+        maxColorIndex = ((Status)status).getMaxFrameIndex();       
+        theDirection = ((Status)status).getDirection();
         blackOut = status.getBlackOut();
         
         buttonSensor = new ButtonSensor(name, id);
@@ -181,7 +188,7 @@ class SpinnerController extends Observable
                     //IF execute() returns TRUE, then call the Server,
                     //which goes to the appModel to 
                     //get a new Record for the next cycle.
-                    record = appRunner.update();
+                    record = update(status.getIndex());
                     System.out.println("AppController: run().update");               
                 }
                 Thread.sleep(period);
@@ -200,7 +207,7 @@ class SpinnerController extends Observable
         //      if Direction == true then inc else dec         
         record.incPosIndex();
         theRadians = getRadians(record.getPosIndex());        
-        theColor = getColor(record.getColorIndex());
+        theColor = getColor(record.getFrameIndex());
         // Tell display about the new image
         setChanged();
         notifyObservers(this);
@@ -211,7 +218,20 @@ class SpinnerController extends Observable
         else newCycle = false;
         return newCycle;    
     }//executeOneStep
+
+    public IClient getClient(){
+        return refClient;
+    }
+    public void setClient(IClient appClient){
+        refClient = appClient;
+    }
     
+    public IRecord update(int i){
+        //Spinners use synchronous communication: 's'
+        return refClient.update(i, 's');    
+//           = refClient.getServer().getModel(i).update()
+//               = refServer.getModel(i).update()        
+    }    
     //////////////////////////////////////////////////////////////////
     public void generateNextImage(Dimension size, Graphics g){         
         center.x = size.width/2;

@@ -69,21 +69,11 @@ public class InterServer{
             int i = command.getIndex();
             System.out.println("InterServer getMessage() Command: "+ name + i);            
             switch(name){
-//                case 's': {
-//                    status = refServer.getStatus(i);
-////                    status.setIncrement(incr);//rwp - updates status for link
-//                    System.out.println("link|InterServer get(s) Status: "+status);
-//                    simpleServer.sendToAllClients(status);
-//                    break;
-//                }
-                 case 'e': {
-//                    record = refServer.cycleEnded(i);
-                    record.setRecord(refServer.cycleEnded(i));                    
-//                    record.setPosIndex(incr);//rwp
-                    System.out.println("link|InterServer get(e) Record:"+record+
-                            " getPosIndex() "+record.getPosIndex());
-                    
-                    simpleServer.sendToAllClients(record);
+                 case 'a': {
+                    Object appController = refServer.getAppController(i);
+                    System.out.println("link|InterServer 'a' getAppController()");
+                    liste.add("getAppController()");                              
+                    simpleServer.sendToAllClients((IAppController)appController);
                     break;
                  }
                  case 'c': {
@@ -94,6 +84,35 @@ public class InterServer{
                     simpleServer.sendToAllClients(clientCount);
                     break;
                  }
+                 case 'd': {
+                    refServer.makeDatabase();
+                    System.out.println("link|InterServer 'd' makeDatabase()");
+                    liste.add("makeDatabase()");                              
+                    break;
+                 }
+                 case 'e': {
+//                    record = refServer.cycleEnded(i);
+                    record.setRecord(refServer.cycleEnded(i, 's'));                    
+//                    record.setPosIndex(incr);//rwp
+                    System.out.println("link|InterServer get(e) Record:"+record+
+                            " getPosIndex() "+record.getPosIndex());                    
+                    simpleServer.sendToAllClients(record);
+                    break;
+                 }
+                 case 'f': {
+                    record.setRecord(refServer.cycleEnded(i, 'a'));                    
+                    System.out.println("link|InterServer get(f) Record:"+record+
+                            " getPosIndex() "+record.getPosIndex());                    
+                    simpleServer.sendToAllClients(record);
+                    break;
+                 }
+//                case 's': {
+//                    status = refServer.getStatus(i);
+////                    status.setIncrement(incr);//rwp - updates status for link
+//                    System.out.println("link|InterServer get(s) Status: "+status);
+//                    simpleServer.sendToAllClients(status);
+//                    break;
+//                }
                  case 'y': {
                     refServer.setSysMode(i);
                     sysMode = refServer.getSysMode();
@@ -101,19 +120,6 @@ public class InterServer{
                             sysMode+" clientCount = "+clientCount);
                     liste.add("Mode = "+sysMode+"; Count = "+clientCount);                              
                     simpleServer.sendToAllClients(sysMode);
-                    break;
-                 }
-                 case 'd': {
-                    refServer.makeDatabase();
-                    System.out.println("link|InterServer 'd' makeDatabase()");
-                    liste.add("makeDatabase()");                              
-                    break;
-                 }
-                 case 'a': {
-                    Object appObj = refServer.getAppObj(i);
-                    System.out.println("link|InterServer 'a' getAppObj()");
-                    liste.add("getAppObj()");                              
-                    simpleServer.sendToAllClients((IAppObj)appObj);
                     break;
                  }
                  

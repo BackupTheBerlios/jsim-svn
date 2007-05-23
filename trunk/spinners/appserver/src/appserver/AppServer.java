@@ -2,6 +2,8 @@ package appserver;
 
 import appdata.AppFactory;
 import interfaces.*;
+import java.util.ArrayList;
+import java.util.concurrent.locks.*;
 
 public class AppServer implements IServer{
 
@@ -9,7 +11,8 @@ public class AppServer implements IServer{
     private AppFactory theAppFactory;
     IAppObj appObj;
     IAppModel appModel;
-    IAppController appController;
+    Lock lock;
+//    IAppController appController;
     IStatus aStatus;
     IRecord aRecord;
     private int clientCount;
@@ -74,9 +77,10 @@ public class AppServer implements IServer{
                 case 0: {
                     increment = 3;
                     delay = 1;
-                    //Status(name,id,IStatus.FUNCTION,mode,IStatus.COOPMODE,increment,
-                    //      direction,delay,delayFactor,maxPosIndex,maxColorIndex,blackout);
-                    aStatus = new spinner.Status("Spinner","0",IStatus.SPINNER,
+                    //<package name>.Status(name,id,IStatus.FUNCTION,mode,
+                    //      IStatus.COOPMODE,increment,direction,delay,
+                    //      delayFactor,maxPosIndex,maxColorIndex,blackout);
+                    aStatus = new spinner.Status(i,"Spinner","0",IStatus.SPINNER,
                             sysMode,coOpMode,increment,true,delay,5,360/increment,14,false);
                     appObj = selectApp(i, aStatus.getName());
                     appObj.setStatus(aStatus);
@@ -85,7 +89,7 @@ public class AppServer implements IServer{
                 case 2: {
                     increment = 6;
                     delay = 3;
-                    aStatus = new spinner.Status("Spinner","1",IStatus.SPINNER,
+                    aStatus = new spinner.Status(i,"Spinner","1",IStatus.SPINNER,
                             sysMode,coOpMode,increment,true,delay,5,360/increment,14,false);
                     appObj = selectApp(i, aStatus.getName());
                     appObj.setStatus(aStatus);
@@ -94,7 +98,7 @@ public class AppServer implements IServer{
                 case 4: {
                     increment = 6;
                     delay = 9;
-                    aStatus = new spinner.Status("Spinner","2",IStatus.SPINNER,
+                    aStatus = new spinner.Status(i,"Spinner","2",IStatus.SPINNER,
                             sysMode,coOpMode,increment,true,delay,5,360/increment,14,false);
                     appObj = selectApp(i, aStatus.getName());                    
                     appObj.setStatus(aStatus);
@@ -103,7 +107,7 @@ public class AppServer implements IServer{
                 case 6: {
                     increment = 6;
                     delay = 27;                    
-                    aStatus = new spinner.Status("Spinner","3",IStatus.SPINNER,
+                    aStatus = new spinner.Status(i,"Spinner","3",IStatus.SPINNER,
                             sysMode,coOpMode,increment,true,delay,5,360/increment,14,false);
                     appObj = selectApp(i, aStatus.getName());                    
                     appObj.setStatus(aStatus);
@@ -113,7 +117,7 @@ public class AppServer implements IServer{
                     name = "Liner";
                     increment = 6;
                     delay = 1;
-                    aStatus = new liner.Status("Liner","0",'a',IStatus.LINER,
+                    aStatus = new liner.Status(i,"Liner","0",'a',IStatus.LINER,
                             sysMode,coOpMode,increment,true,delay,5,200,14,false);
                     appObj = selectApp(i, aStatus.getName());
                     appObj.setStatus(aStatus);
@@ -122,7 +126,7 @@ public class AppServer implements IServer{
                 case 3: {
                     increment = 6;
                     delay = 3;
-                    aStatus = new liner.Status("Liner","1",'b',IStatus.LINER,
+                    aStatus = new liner.Status(i,"Liner","1",'b',IStatus.LINER,
                             sysMode,coOpMode,increment,true,delay,5,100,14,false);
                     appObj = selectApp(i, aStatus.getName());                    
                     appObj.setStatus(aStatus);
@@ -131,17 +135,31 @@ public class AppServer implements IServer{
                 case 5: {
                     increment = 6;
                     delay = 9;
-                    aStatus = new liner.Status("Liner","2",'c',IStatus.LINER,
+                    aStatus = new liner.Status(i,"Liner","2",'c',IStatus.LINER,
                             sysMode,coOpMode,increment,true,delay,5,100,14,false);
                     appObj = selectApp(i, aStatus.getName());                    
                     appObj.setStatus(aStatus);
                     appObj.makeApp(aStatus);
                 }break;
                 case 7: {
+                    int maxFrameIndex = 17;
+                    ArrayList fileList = new ArrayList();
+                    String fileName = "C:/Documents and Settings/All Users/Documents/" +
+                            "My Pictures/Sample Pictures/Blue hills.jpg";
+                    fileList.add(fileName);
+                    String dir = "C:/Documents and Settings/Roger/My Documents/"+
+                            "My Pictures";
+//                    String dir = "C:/Program Files/Java/jdk1.6.0_01/" +
+//               "demo/applets/Animator/images/Beans";
+                    for (int imageNum = 1; imageNum <= maxFrameIndex; imageNum++){
+                        fileName = dir + "/T" + imageNum + "[1].gif";            
+                        fileList.add(fileName);                        
+                    }
+                    String text = "Duke tumbling!";
                     increment = 6;
                     delay = 27;
-                    aStatus = new liner.Status("Liner","3",'d',IStatus.LINER,
-                            sysMode,coOpMode,increment,true,delay,5,100,14,false);
+                    aStatus = new painter.Status(i,"Painter","0",text,IStatus.PAINTER,
+                            sysMode,increment,delay,5,maxFrameIndex,fileList,false);
                     appObj = selectApp(i, aStatus.getName());                    
                     appObj.setStatus(aStatus);
                     appObj.makeApp(aStatus);
@@ -149,7 +167,7 @@ public class AppServer implements IServer{
                 default:{
                     increment = 6;
                     delay = 1;
-                    aStatus = new liner.Status("Liner","n",'e',IStatus.LINER,
+                    aStatus = new liner.Status(i,"Liner","n",'e',IStatus.LINER,
                             sysMode,coOpMode,increment,true,delay,5,100,14,false);
                     appObj = selectApp(i, aStatus.getName());                    
                     appObj.setStatus(aStatus);
@@ -179,8 +197,12 @@ public class AppServer implements IServer{
     public IAppObj getAppObj(int i) {
         return dbManager.getAppObj(i);
     }
+    //?synchronized?
+    public IAppController getAppController(int i) {
+        return dbManager.getAppObj(i).getAppController();
+    }
     
-    public IRecord cycleEnded(int i){
+    public IRecord cycleEnded(int i, char comm){
         //Now we do the job requested by the appController.
         //PRE:  index 'i' from the appController to locate appObj[i] in the
         //      database.  appObj[i].record has all the data needed to define
@@ -189,17 +211,26 @@ public class AppServer implements IServer{
         //POST: A new record is returned
         // First note the sysMode
         // Different modes show problems of mutual exclusion etc
-        // Non-zero sleep times before starting a new cycle help to
+        // Non-zero sleep times before completing the update help to
         // ensure that clashes will occur if the system is unsafe.
+        //      Mode 0: a different record for each request -- no conflict.
+        //      Mode 1: the same record used for all -- process switching leads
+        //              to conflict.
+        //      Mode 2: as for Mode 1, but synchronized access to the same
+        //              record prevents conflict.
         int sleepTime = 0;
         IAppModel appModel;
-//        IRecord record;
         switch(sysMode){
             // Decide whether to do anything special depending on mode
             case IStatus.NORMAL:{
-                sleepTime = 0;
+                sleepTime = 10;
                 appModel = dbManager.getAppModel(i);
-                aRecord = appModel.update(dbManager.getRecord(i));
+                IRecord aRecord = appModel.update(dbManager.getRecord(i)); 
+                    try{
+                        Thread.sleep(sleepTime);
+                    }catch(InterruptedException e){
+                        System.out.println("Interrupted sleep");
+                    }
                 dbManager.setRecord(i, aRecord);
                 return aRecord;
             }//break;    
@@ -249,7 +280,7 @@ public class AppServer implements IServer{
     return aRecord;            
     }
     
-    //Used in remote mode
+    //Used in remote mode to respond to messages starting with 'm'.
     public String messageSent(String m){
         return m;
     }    

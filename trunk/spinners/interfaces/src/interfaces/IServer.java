@@ -24,13 +24,13 @@ public interface IServer {
     public int getClientCount();
     public void setClientCount(int i);
 
-    public IAppObj getAppObj(int i);
-//    public IAppController getAppController(int i);    
+//    public IAppObj getAppObj(int i);
+    public IAppController getAppController(int i);    
 //    
 //    public IStatus getStatus(int i);    
 //    public IRecord getRecord(int i);
 
-    public IRecord cycleEnded(int i);
+    public IRecord cycleEnded(int i, char comm);
     
     public void makeDatabase();
     

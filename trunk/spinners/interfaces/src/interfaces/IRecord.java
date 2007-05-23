@@ -27,9 +27,9 @@ public interface IRecord extends Serializable{
 //    public boolean getDirection();
 //    public void setDirection(boolean newValue);
     
-    public int getColorIndex();
-    public void setColorIndex(int newIndex);
-    public int incColorIndex();
+    public int getFrameIndex();
+    public void setFrameIndex(int newIndex);
+    public int incFrameIndex();
     
 //    public boolean getBlackOut(); 
 //    public void setBlackOut(boolean newValue);

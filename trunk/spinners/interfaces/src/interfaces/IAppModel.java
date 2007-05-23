@@ -15,5 +15,5 @@ package interfaces;
  */
 public interface IAppModel {
     IRecord update(IRecord record);
-    void setMaxColorIndex(int val);
+    void setMaxFrameIndex(int val);
 }

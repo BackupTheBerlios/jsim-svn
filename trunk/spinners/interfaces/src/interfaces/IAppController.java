@@ -19,12 +19,13 @@ import java.util.Observable;
  * @author Roger
  */
 public interface IAppController{    
-    public void startController(IAppRunner appRunner, IStatus status);
+    public void setClient(IClient appClient);
+    public void startController(/*IAppRunner appRunner, */IStatus status);
     public boolean executeOneStep(IRecord record);
     public void generateNextImage(Dimension size, Graphics g);
     public ActionListener getListener();
     public Observable getObservable();    
     public String getName();
     public String getId();
-    public int getMode();  
+    public int getMode();
 }

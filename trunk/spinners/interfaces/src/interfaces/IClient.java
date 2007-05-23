@@ -20,6 +20,7 @@ public interface IClient {
     public void initClient();
     public void startClient();
     public IAppController getViewable(int i);
+    public IRecord update(int i, char comm);
     public int getSysMode();
     public void setSysMode(int val);    
     public int getCount();

@@ -22,6 +22,7 @@ public interface IStatus {
     //the Functions:
     final static int SPINNER = 0;
     final static int LINER = 1;
+    final static int PAINTER = 2;    
     //the Parameters        
     final static int INCREMENT = 1;     //Constants identifying parameters
     final static int DIRECTION = 2;
@@ -29,14 +30,17 @@ public interface IStatus {
     final static int DELAY_FACTOR = 4;   
     final static int SEQUENCER = 5;
    
-//    public void makeStatus(String name, String id, int mode);
+//    public void makeStatus(int index, String name, String id, int mode);
     public IStatus getStatus();
-//    public void setStatus(String name, String id, int function,
+//    public void setStatus(int index, String name, String id, int function,
 //            int mode, int coOpMode,
 //                int increment, boolean direction, int delay, int delayFactor,
 //                     int maxPosIndex, int maxColorIndex, boolean blackOut);
-    public void copyStatus(IStatus fromStatus);
+//    public void copyStatus(IStatus fromStatus);
 
+    public int getIndex();
+    public void setIndex(int val);        
+    
     public String getName();
     public void setName(String val);
     
@@ -49,14 +53,14 @@ public interface IStatus {
     public int getMode();
     public void setMode(int val);        
 
-    public int getCoOpMode();
-    public void setCoOpMode(int val);    
+//    public int getCoOpMode();
+//    public void setCoOpMode(int val);    
     
     public int getIncrement();
     public void setIncrement(int val);    
     
-    public boolean getDirection();
-    public void setDirection(boolean val);       
+//    public boolean getDirection();
+//    public void setDirection(boolean val);       
 
     public int getDelay();
     public void setDelay(int val);    
@@ -70,7 +74,7 @@ public interface IStatus {
     public int getMaxPosIndex();
     public void setMaxPosIndex(int val);    
     
-    public int getMaxColorIndex();
-    public void setMaxColorIndex(int val);
+    public int getMaxFrameIndex();
+    public void setMaxFrameIndex(int val);
 }            
 

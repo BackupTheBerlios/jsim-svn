@@ -186,13 +186,10 @@ public class AppClientSys extends JFrame implements IMainForm{
     }
   }
 
-  private void initGUIFrame(){
-    int n = appClient.getCount()<2?2:appClient.getCount()+1; 
-    setSize(200*n/2,600);    
-    theGUIPanel = new GUIPanel(this,appClient);    
+  private void initGUIPanel(){
+    theGUIPanel = new GUIPanel(this,appClient);
     add("Center", theGUIPanel);
     setVisible(true);  
-    super.setTitle(title1+" "+appClient.getSysMode()+".  "+title2);
   }
   
   public void open(){
@@ -202,21 +199,26 @@ public class AppClientSys extends JFrame implements IMainForm{
       readFields();
       simpleClient.openConnection();
       simpleClient.checkConnection();
+      
       if (init == true){
           int clientCount = Integer.parseInt(count.getText());
           int sysMode = Integer.parseInt(mode.getText());
           appClient.setCount(clientCount);
           appClient.setSysMode(sysMode);
+          //Set Frame size to at least 200 else dependent on clientCount.
+          int n = clientCount<2?1:(clientCount+1)/2; 
+          setSize(200*n,600);    
+          super.setTitle(title1+" "+appClient.getSysMode()+".  "+title2);
           
           //server is remote -- set it up via network
-          interClient.initServer(clientCount, sysMode);
-   
-          initGUIFrame();
-          appClient.startClient(this);
-          liste.add("Mode = "+sysMode+"; Count = "+clientCount);          
+          interClient.initServer(clientCount, sysMode);   
+          appClient.initClient();
+          initGUIPanel();
+          appClient.startClient();
 
-          init = false;
+          liste.add("Mode = "+sysMode+"; Count = "+clientCount);          
           System.out.println("clientFrame.open()");
+          init = false;
       }
     }
     catch (Exception ex)
@@ -246,10 +248,6 @@ public class AppClientSys extends JFrame implements IMainForm{
   {
     System.exit(0);
   }
-  
-  public GUIPanel getGUIPanel(){
-    return theGUIPanel;
-  }  
 }
 
 //////////////////////////////////////////////////

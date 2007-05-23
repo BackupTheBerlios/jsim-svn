@@ -35,11 +35,11 @@ public class Liner implements IAppObj, Serializable{
 
     public void makeApp(IStatus status){
         setStatus(status);
-        linerModel = new LinerModel(status.getMaxColorIndex());
-        linerController = new LinerController(); 
+        linerModel = new LinerModel(((Status)status).getMaxFrameIndex());
         //make runningRecord: name,id,mode,posIndex,colorIndex
         record = new Record(status.getName(),status.getId(),
                 status.getMode(),8,9);
+        linerController = new LinerController(status,record); 
         System.out.println("Liner makeApp(): "+
                 " "+linerModel+" "+linerController+" "+status+" "+record);
     }
@@ -74,10 +74,10 @@ public class Liner implements IAppObj, Serializable{
     
 ////////////////////////////////////////////
 class LinerModel implements IAppModel, Serializable{
-    int maxColorIndex;
+    int maxFrameIndex;
     
     LinerModel(int val){
-        maxColorIndex = val;
+        maxFrameIndex = val;
     }
 
     public IRecord update(IRecord record){
@@ -87,10 +87,10 @@ class LinerModel implements IAppModel, Serializable{
         // First reset the posIndex
         record.setPosIndex(0); //depending on direction  //***
         // then increment the colour index
-        record.setColorIndex(record.getColorIndex() + 1);
-        if (record.getColorIndex() == maxColorIndex){ 
+        record.setFrameIndex(record.getFrameIndex() + 1);
+        if (record.getFrameIndex() == maxFrameIndex){ 
             // if all colours done, start again
-            record.setColorIndex(0);
+            record.setFrameIndex(0);
             //if ((record).incCount|2 == 0){
             // (record).setDirection(true)}
             //else (record).setDirection(false);
@@ -98,15 +98,18 @@ class LinerModel implements IAppModel, Serializable{
         return record;
     }
     
-    public void setMaxColorIndex(int val){
-        maxColorIndex = val;
+    public void setMaxFrameIndex(int val){
+        maxFrameIndex = val;
     }    
 }    
 ////////////////////////////////////////////
 class LinerController extends Observable 
         implements IAppController, Runnable, Serializable{
+    IClient refClient;
+    int i;
+    IStatus status;
+    IRecord record;    
     ButtonSensor buttonSensor;
-    IAppRunner appRunner;
     // Attributes
     String name;
     String id;
@@ -114,9 +117,10 @@ class LinerController extends Observable
     int delay;
     int delayFactor;
     int period;    
-    int maxPosIndex;
+    int maxPosIndex;    
+    int increment;      //not used from status, but calculated from canvas size
+    double increment1;
     
-    int increment;
     Point first = new Point();    
     Point start = new Point();
     Point startPoint = new Point();
@@ -136,24 +140,28 @@ class LinerController extends Observable
     boolean newCycle;
     
     // Constructor
-    public LinerController(){        
+    public LinerController(IStatus status, IRecord record){        
+        this.status = status;
+        this.record = record;
+        startController(status);
+        char x = ((Status)status).getCharX();
+        System.out.println("Made LinerController "+x);
     }
       
-    public void startController(IAppRunner appRunner, IStatus status){
-        this.appRunner = appRunner;
+    public void startController(IStatus status){
         name = status.getName();
         id = status.getId();
         mode = status.getMode();
         maxPosIndex =  status.getMaxPosIndex();
         increment = status.getIncrement();
-        theDirection = status.getDirection();
+        theDirection = ((Status)status).getDirection();
         blackOut = status.getBlackOut();
 
         buttonSensor = new ButtonSensor(name, id);
         
         first.x = 5;
         first.y = 5;
-        setStartPoint(start);
+//        setStartPoint(start);
         stepNumber = 0;
 
         theColor = new Color(0,0,0);
@@ -179,18 +187,16 @@ class LinerController extends Observable
     /////////////////////////////////////////////////////////////////
     public void run(){
         try{
-            //-------------------
             //Define running speed for this activity
             delay = status.getDelay();
             delayFactor = status.getDelayFactor();
             period = delay*delayFactor;
-            //-------------------
             while (true) {
                 if(executeOneStep(record)){
                     //IF execute() returns TRUE, then call the Server,
                     //which goes to the appModel to 
                     //get a new Record for the next cycle.
-                    record = appRunner.update();
+                    record = update(status.getIndex());
                     System.out.println("AppController: run().update");               
                 }
                 Thread.sleep(period);
@@ -208,7 +214,7 @@ class LinerController extends Observable
         // Increment the start for direction true (anti-clockwise)
         //      if Direction == true then inc else dec         
         stepNumber = record.incPosIndex();
-        theColor = getColor(record.getColorIndex());
+        theColor = getColor(record.getFrameIndex());
         // Tell display about the new image
         setChanged();
         notifyObservers(this);
@@ -219,16 +225,30 @@ class LinerController extends Observable
         else newCycle = false;
         return newCycle;    
     }//executeOneStep
+
+    public IClient getClient(){
+        return refClient;
+    }
+    public void setClient(IClient appClient){
+        refClient = appClient;
+    }
+    public IRecord update(int i){
+        return refClient.update(i, 's'); 
+    }
     
     //////////////////////////////////////////////////////////////////
-    public void generateNextImage(Dimension size, Graphics g){         
+    public void generateNextImage(Dimension size, Graphics g){
+        //Lines all start level with first.x
         start.x = first.x;
-        start.y = first.y + stepNumber*(size.height-10)/maxPosIndex;
+        //start.y steps down from first.y by increment depending on size of canvas
+        //Make double to avoid integer rounding down to zero increments
+        double increment1 = ((double)size.height-10)/maxPosIndex;
+        start.y = first.y + (int)(stepNumber*increment1);
         setStartPoint(start);
 
-        double length = size.width - 10;	//5 pixel inset        
-		endPoint.x = (int) (startPoint.x + length);
-		endPoint.y = (int) (startPoint.y);		
+        int length = size.width - 10;	//5 pixel inset each side
+		endPoint.x = (startPoint.x + length);
+		endPoint.y = (startPoint.y);
         setEndPoint(endPoint);
 
         if (blackOut){   //blackOut the previous line     

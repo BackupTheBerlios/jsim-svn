@@ -4,10 +4,11 @@
 package liner;
 
 import java.awt.event.*;
+import java.io.Serializable;
 
 /** @Author: Roger Prowse
  */
-public class ButtonSensor implements ActionListener{
+public class ButtonSensor implements ActionListener, Serializable{
     // Attributes
     String name;
     String id;
@@ -42,7 +43,7 @@ public class ButtonSensor implements ActionListener{
     public synchronized void checkGoingState(){
         try{
             while (!goingState){
-//                System.out.println("Spinner"+name+id+": Waiting ");
+//                System.out.println("checkGoingState "+name+id+": Waiting ");
                 wait();
             }
         }catch(InterruptedException e){

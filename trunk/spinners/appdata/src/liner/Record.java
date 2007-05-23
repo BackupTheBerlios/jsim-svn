@@ -1,6 +1,6 @@
 // spinners_netbeans\appsys\server\Record.java
 //
-// A 'record' object is maintained by each spinner/shader and
+// A 'record' object is maintained by each application and
 // supplies parameters defining state.
 // There are no facilities for processing the Record here, only 
 // set() and get().
@@ -22,7 +22,7 @@ public class Record implements IRecord, Serializable{// , Cloneable{
     String id;
     int mode;
     int posIndex;
-    int colorIndex;
+    int frameIndex;
 
     public Record(){
         name = " ";
@@ -33,15 +33,15 @@ public class Record implements IRecord, Serializable{// , Cloneable{
         // and other parameters, which do not change during a run, are
         // defined in Status)
         posIndex = 0;
-        colorIndex = 0;
+        frameIndex = 0;
     }
     
-    public Record(String name, String id, int mode, int posIndex, int colorIndex){
+    public Record(String name, String id, int mode, int posIndex, int frameIndex){
         this.name = name;
         this.id = id;
         this.mode = mode;
         this.posIndex = posIndex;
-        this.colorIndex = colorIndex;
+        this.frameIndex = frameIndex;
     }
     
      public synchronized IRecord getRecord(){
@@ -49,14 +49,14 @@ public class Record implements IRecord, Serializable{// , Cloneable{
         toRecord.setId(id);
         toRecord.setMode(mode);
         toRecord.setPosIndex(posIndex);
-        toRecord.setColorIndex(colorIndex);
+        toRecord.setFrameIndex(frameIndex);
         return toRecord;
      }     
     public synchronized void setRecord(IRecord fromRecord){
         id = fromRecord.getId();
         mode = fromRecord.getMode();
         posIndex = fromRecord.getPosIndex();
-        colorIndex = fromRecord.getColorIndex();
+        frameIndex = fromRecord.getFrameIndex();
     }
      
     public String getName(){
@@ -91,54 +91,20 @@ public class Record implements IRecord, Serializable{// , Cloneable{
         return posIndex;
     }        
     
-    public synchronized int getColorIndex(){
-        return colorIndex;
+    public synchronized int getFrameIndex(){
+        return frameIndex;
     }    
-    public synchronized void setColorIndex(int newIndex){
-        colorIndex = newIndex;
+    public synchronized void setFrameIndex(int newIndex){
+        frameIndex = newIndex;
     }    
-    public synchronized int incColorIndex(){
-        colorIndex += 1;
-        return colorIndex;
+    public synchronized int incFrameIndex(){
+        frameIndex += 1;
+        return frameIndex;
     }
     
 //    public String toString(){
-//      String s = "Record: "/*+this+"  "*/+name+id+" "+mode+"  "+posIndex+" "+colorIndex;
+//      String s = "Record: "/*+this+"  "*/+name+id+" "+mode+"  "+posIndex+" "+frameIndex;
 //        return s;
 //    }
 
-
-/*    
-    public void fromString(String s){
-        String[] subStr;
-        subStr = serializer.ExtractSubstrings(s);
-
-        name = subStr[0].charAt(0);
-        id = Integer.parseInt(subStr[1]);
-        mode = Integer.parseInt(subStr[2]);
-        posIndex = Integer.parseInt(subStr[3]);
-        colorIndex = Integer.parseInt(subStr[4]);
-    }
-    
- */
 }//Record
-/*      ///////////////////////////////////////////////////////////////////////
- * Note on Cloning:
-        // NB: The following technique returns a clone of the stored record,
-        // since the original record may be changed by any other process sharing
-        // the record memory, before the process actually gets round to sending
-        // it to the Observer.
-        // This applies to mode 2, and to the Consumer in mode 3 (but not to the
-        // Producer, as it is the only one to change the shared record).
-        ///////////////////////////////////////////////////////////////////////
- *      public synchronized Record getRecord(){
-            try{
-                return (Record) super.clone();
-            }catch(CloneNotSupportedException e){
-                System.out.println("Cloning not allowed");
-                return this;
-            }
-        {
- */
-
-

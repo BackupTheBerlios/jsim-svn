@@ -25,7 +25,8 @@ import java.awt.Dimension;
 public class DisplayCanvas extends Canvas implements Observer{
     IClient refClient;
     Point centerPoint = new Point();    
-    Dimension initialSize;
+//    Dimension initialSize;
+    Dimension size;
     IAppController refAppController;
     
     /**
@@ -33,11 +34,12 @@ public class DisplayCanvas extends Canvas implements Observer{
      */
     public DisplayCanvas(IAppController appController) {
         setBackground(Color.black);
-        initialSize = getSize();
+        size = getSize();
         
         // 'this' displayCanvas needs to observe changes in the relevant
         // 'Observable' activity or a clientInLink using
         //	getObservable() as defined in class 'appController'
+        refAppController = appController;
         Observable theObservable = (Observable)appController.getObservable();
         theObservable.addObserver(this);        
     }
@@ -45,13 +47,12 @@ public class DisplayCanvas extends Canvas implements Observer{
     /////////////////////////////////////////////
     public void update(Observable aObservable, Object/*IAppController*/ appController){
         //called by notify() in Observable
-        refAppController = (IAppController)appController;
         repaint();
     }
     /////////////////////////////////////////////            
     public void update(Graphics g){
         // Called by repaint()
-        Dimension size;
+//        Dimension size;
         size = getSize();
         refAppController.generateNextImage(size,g);
     }

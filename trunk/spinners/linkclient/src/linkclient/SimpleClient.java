@@ -186,8 +186,7 @@ class Reply{
     
     public synchronized Object getReply(){
         try{
-            while (!replyMade)
-            {
+            while (!replyMade){
                 System.out.println("Reply: Waiting ");
                 wait();
                 System.out.println("Reply: Done Wait ");                

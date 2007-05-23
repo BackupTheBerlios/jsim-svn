@@ -101,14 +101,14 @@ public class InterClient implements IServer{
         return record;
     }
     
-    public synchronized IAppObj getAppObj(int i){
+    public synchronized IAppController getAppController(int i){
 //        /*Make connection
 //         *Send message to get record
-        Object appObj = new Object();
+        Object appController = new Object();
         try {
             Command command = new Command('a', i);
             simpleClient.checkedSendToServer(command);            
-            appObj = (IAppObj)simpleClient.getReply();
+            appController = (IAppController)simpleClient.getReply();
         }
         catch (Exception ex)
         {
@@ -117,7 +117,7 @@ public class InterClient implements IServer{
           liste.setBackground(Color.yellow);
         }         
          //Receive record        
-        return (IAppObj)appObj;
+        return (IAppController)appController;
     }   
     
     public int getClientCount(){
@@ -180,26 +180,47 @@ public class InterClient implements IServer{
     }
         
     ///////////////////////////////////////
-    public synchronized IRecord cycleEnded(int i){
+    public synchronized IRecord cycleEnded(int i, char comm){
         /*Make connection
          *Send message to indicate spinner id*/
         Record record = new Record();
-        try {
-            Command command = new Command('e', i);
-            char c = command.getName();
-            System.out.println("InterClient cycleEnded() = "+c);//+"  "+
-            simpleClient.checkedSendToServer(command);
-            record = (Record)simpleClient.getReply();
-            System.out.println("InterClient cycleEnded(): "+record);//+"  "+
-//                record.getName()+record.getId()+
-//                record.getPosIndex()+record.getColorIndex());            
+        if (comm == 's'){
+            try {
+                Command command = new Command('e', i);
+                char c = command.getName();
+                System.out.println("InterClient cycleEnded() = "+c);//+"  "+
+                simpleClient.checkedSendToServer(command);
+                record = (Record)simpleClient.getReply();
+                System.out.println("InterClient cycleEnded(): "+record);//+"  "+
+    //                record.getName()+record.getId()+
+    //                record.getPosIndex()+record.getColorIndex());            
+            }
+            catch (Exception ex)
+            {
+              liste.add(ex.toString());
+              liste.makeVisible(liste.getItemCount()-1);
+              liste.setBackground(Color.yellow);
+            }
         }
-        catch (Exception ex)
-        {
-          liste.add(ex.toString());
-          liste.makeVisible(liste.getItemCount()-1);
-          liste.setBackground(Color.yellow);
-        }         
+       if (comm == 'a'){
+            try {
+                Command command = new Command('f', i);
+                char c = command.getName();
+                System.out.println("InterClient cycleEnded() = "+c);//+"  "+
+                simpleClient.checkedSendToServer(command);
+                //now suspend until a message comes with the reply
+                record = (Record)simpleClient.getReply();
+                System.out.println("InterClient cycleEnded(): "+record);//+"  "+
+    //                record.getName()+record.getId()+
+    //                record.getPosIndex()+record.getColorIndex());            
+            }
+            catch (Exception ex)
+            {
+              liste.add(ex.toString());
+              liste.makeVisible(liste.getItemCount()-1);
+              liste.setBackground(Color.yellow);
+            }
+        }
         return record;
     }
     
